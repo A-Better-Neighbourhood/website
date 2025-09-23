@@ -28,3 +28,11 @@ export const addReport = async (data: CreateReportType) => {
   mockReports.push(newReport);
   return newReport;
 };
+
+export const upvoteReport = async (id: string) => {
+  const report = mockReports.find((report) => report.id === id);
+  if (report) {
+    report.upvotes += 1;
+  }
+  return report;
+};
