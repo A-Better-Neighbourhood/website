@@ -3,6 +3,7 @@
 "use client";
 
 import { upvoteReport } from "@/actions/reports";
+import { ArrowBigUp } from "lucide-react";
 import { useState } from "react";
 
 interface UpvoteButtonProps {
@@ -52,16 +53,7 @@ const UpvoteButton = ({
         isLoading ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
       } ${className}`}
     >
-      <svg
-        className={`w-4 h-4 transition-transform duration-200 ${
-          hasUpvoted ? "scale-110" : ""
-        }`}
-        fill={hasUpvoted ? "currentColor" : "none"}
-        stroke="currentColor"
-        viewBox="0 0 20 20"
-      >
-        <path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" />
-      </svg>
+      <ArrowBigUp />
       <span className="text-sm font-medium">{upvotes}</span>
       {isLoading && (
         <svg

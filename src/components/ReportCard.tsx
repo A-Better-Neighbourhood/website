@@ -35,7 +35,7 @@ const formatDate = (dateString: string) => {
 const ReportCard = ({ report }: ReportCardProps) => {
   return (
     <Link href={`/reports/${report.id}`}>
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer group">
+      <div className="bg-white h-full rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer group">
         <div className="relative">
           <Image
             src={report.image}
