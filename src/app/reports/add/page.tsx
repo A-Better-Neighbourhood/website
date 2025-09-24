@@ -3,74 +3,74 @@
 "use client";
 
 import Container from "@/components/Container";
-import { CreateReportSchema } from "@/schemas/ReportSchema";
+import CameraCapture from "@/components/CameraCapture";
+import Map from "@/components/Map";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { addReport } from "@/actions/reports";
+import { CreateReportSchema, CreateReportType } from "@/schemas/ReportSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useState } from "react";
-import { z } from "zod";
+import { useForm } from "react-hook-form";
 
 const AddReportPage = () => {
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    image: "",
-    location: [0, 0] as [number, number],
-    creator: "",
-  });
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [cameraError, setCameraError] = useState<string | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setErrors({});
+  const form = useForm<CreateReportType>({
+    resolver: zodResolver(CreateReportSchema),
+    defaultValues: {
+      title: "",
+      description: "",
+      image: "",
+      location: [0, 0],
+      creator: "",
+    },
+  });
 
+  const {
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { isSubmitting },
+  } = form;
+  const watchedLocation = watch("location");
+
+  const onSubmit = async (data: CreateReportType) => {
     try {
-      // Validate form data
-      CreateReportSchema.parse(formData);
-
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
+      await addReport(data);
       setIsSuccess(true);
-      setFormData({
-        title: "",
-        description: "",
-        image: "",
-        location: [0, 0],
-        creator: "",
-      });
+      form.reset();
     } catch (error) {
-      if (error instanceof z.ZodError) {
-        const fieldErrors: { [key: string]: string } = {};
-        error.issues.forEach((err) => {
-          if (err.path[0]) {
-            fieldErrors[err.path[0] as string] = err.message;
-          }
-        });
-        setErrors(fieldErrors);
-      }
-    } finally {
-      setIsSubmitting(false);
+      console.error("Failed to submit report:", error);
+      // Handle submission error here
     }
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      // In a real app, you'd upload to a service like Cloudinary
-      const mockImageUrl = `https://images.unsplash.com/photo-1581092921461-eab62e97a780?w=400&h=300&fit=crop`;
-      setFormData((prev) => ({ ...prev, image: mockImageUrl }));
-    }
+  const handleCameraCapture = (
+    image: string,
+    location: { lat: number; lng: number }
+  ) => {
+    setValue("image", image, { shouldValidate: true });
+    setValue("location", [location.lat, location.lng], {
+      shouldValidate: true,
+    });
+    setCameraError(null);
   };
 
-  const handleLocationClick = () => {
-    // Mock location selection - in real app, would open map picker
-    const mockLocation: [number, number] = [
-      40.7128 + (Math.random() - 0.5) * 0.1,
-      -74.006 + (Math.random() - 0.5) * 0.1,
-    ];
-    setFormData((prev) => ({ ...prev, location: mockLocation }));
+  const handleCameraError = (error: string) => {
+    setCameraError(error);
   };
 
   if (isSuccess) {
@@ -161,243 +161,226 @@ const AddReportPage = () => {
 
           {/* Form */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Title */}
-              <div>
-                <label
-                  htmlFor="title"
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  Title <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  id="title"
-                  value={formData.title}
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, title: e.target.value }))
-                  }
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                    errors.title ? "border-red-300" : "border-gray-300"
-                  }`}
-                  placeholder="Brief description of the issue"
-                />
-                {errors.title && (
-                  <p className="mt-1 text-sm text-red-600">{errors.title}</p>
-                )}
-              </div>
-
-              {/* Description */}
-              <div>
-                <label
-                  htmlFor="description"
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  Description <span className="text-red-500">*</span>
-                </label>
-                <textarea
-                  id="description"
-                  rows={4}
-                  value={formData.description}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      description: e.target.value,
-                    }))
-                  }
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                    errors.description ? "border-red-300" : "border-gray-300"
-                  }`}
-                  placeholder="Provide more details about the issue..."
-                />
-                {errors.description && (
-                  <p className="mt-1 text-sm text-red-600">
-                    {errors.description}
-                  </p>
-                )}
-              </div>
-
-              {/* Image Upload */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Photo
-                </label>
-                <div className="flex items-center justify-center w-full">
-                  <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
-                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                      <svg
-                        className="w-8 h-8 mb-3 text-gray-400"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+            <Form {...form}>
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                {/* Title */}
+                <FormField
+                  control={form.control}
+                  name="title"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        Title <span className="text-red-500">*</span>
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Brief description of the issue"
+                          {...field}
                         />
-                      </svg>
-                      <p className="mb-2 text-sm text-gray-500">
-                        <span className="font-semibold">Click to upload</span>{" "}
-                        or drag and drop
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        PNG, JPG or GIF (MAX. 10MB)
-                      </p>
-                    </div>
-                    <input
-                      type="file"
-                      className="hidden"
-                      accept="image/*"
-                      onChange={handleImageChange}
-                    />
-                  </label>
-                </div>
-                {formData.image && (
-                  <div className="mt-3">
-                    <p className="text-sm text-green-600">
-                      ✓ Image uploaded successfully
-                    </p>
-                  </div>
-                )}
-              </div>
-
-              {/* Location */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Location <span className="text-red-500">*</span>
-                </label>
-                <button
-                  type="button"
-                  onClick={handleLocationClick}
-                  className="w-full p-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-left"
-                >
-                  <div className="flex items-center gap-3">
-                    <svg
-                      className="w-5 h-5 text-gray-400"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                    </svg>
-                    <div>
-                      {formData.location[0] === 0 &&
-                      formData.location[1] === 0 ? (
-                        <span className="text-gray-500">
-                          Click to select location on map
-                        </span>
-                      ) : (
-                        <div>
-                          <p className="text-gray-900 font-medium">
-                            Location Selected
-                          </p>
-                          <p className="text-sm text-gray-500">
-                            Lat: {formData.location[0].toFixed(4)}, Lng:{" "}
-                            {formData.location[1].toFixed(4)}
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </button>
-                {errors.location && (
-                  <p className="mt-1 text-sm text-red-600">{errors.location}</p>
-                )}
-              </div>
-
-              {/* Creator (Optional) */}
-              <div>
-                <label
-                  htmlFor="creator"
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  Your Name (Optional)
-                </label>
-                <input
-                  type="text"
-                  id="creator"
-                  value={formData.creator}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      creator: e.target.value,
-                    }))
-                  }
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Leave blank to report anonymously"
-                />
-              </div>
-
-              {/* Submit Button */}
-              <div className="flex gap-4 pt-4">
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="flex-1 bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 disabled:bg-blue-400 transition-colors font-medium flex items-center justify-center gap-2"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <svg
-                        className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
-                      Submitting...
-                    </>
-                  ) : (
-                    <>
-                      <svg
-                        className="w-5 h-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M12 4v16m8-8H4"
-                        />
-                      </svg>
-                      Submit Report
-                    </>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
                   )}
-                </button>
-                <Link
-                  href="/reports"
-                  className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
-                >
-                  Cancel
-                </Link>
-              </div>
-            </form>
+                />
+
+                {/* Description */}
+                <FormField
+                  control={form.control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        Description <span className="text-red-500">*</span>
+                      </FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Provide more details about the issue..."
+                          rows={4}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Camera Capture */}
+                <div className="space-y-2">
+                  <Label>
+                    Photo & Location <span className="text-red-500">*</span>
+                  </Label>
+                  <p className="text-sm text-gray-600 mb-4">
+                    Take a photo of the issue to automatically capture both the
+                    image and your current location. This ensures authenticity
+                    and helps us locate the problem precisely.
+                  </p>
+
+                  {cameraError && (
+                    <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                      <p className="text-red-700 text-sm">{cameraError}</p>
+                    </div>
+                  )}
+
+                  <CameraCapture
+                    onCapture={handleCameraCapture}
+                    onError={handleCameraError}
+                  />
+
+                  {form.formState.errors.image && (
+                    <p className="text-sm text-red-600">
+                      {form.formState.errors.image.message}
+                    </p>
+                  )}
+                  {form.formState.errors.location && (
+                    <p className="text-sm text-red-600">
+                      {form.formState.errors.location.message}
+                    </p>
+                  )}
+                </div>
+
+                {/* Location Preview */}
+                {watchedLocation[0] !== 0 && watchedLocation[1] !== 0 ? (
+                  <div className="space-y-2">
+                    <Label>Location Preview</Label>
+                    <div className="space-y-3">
+                      <div className="text-sm text-gray-600 p-3 bg-green-50 rounded-lg">
+                        <div className="flex items-center gap-2 mb-1">
+                          <svg
+                            className="w-4 h-4 text-green-600"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M5 13l4 4L19 7"
+                            />
+                          </svg>
+                          <span className="font-medium text-green-800">
+                            Location captured successfully!
+                          </span>
+                        </div>
+                        <div className="text-green-700">
+                          <strong>Coordinates:</strong>{" "}
+                          {watchedLocation[0].toFixed(6)},{" "}
+                          {watchedLocation[1].toFixed(6)}
+                        </div>
+                      </div>
+                      <Map
+                        lat={watchedLocation[0]}
+                        lng={watchedLocation[1]}
+                        height="200px"
+                        className="border border-gray-200"
+                      />
+                    </div>
+                  </div>
+                ) : watchedLocation[0] === 0 &&
+                  watchedLocation[1] === 0 &&
+                  form.watch("image") ? (
+                  <div className="space-y-2">
+                    <Label>Location Status</Label>
+                    <div className="text-sm text-gray-600 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                      <div className="flex items-center gap-2 mb-1">
+                        <svg
+                          className="w-4 h-4 text-yellow-600"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.864-.833-2.634 0L3.167 16.5c-.77.833.192 2.5 1.732 2.5z"
+                          />
+                        </svg>
+                        <span className="font-medium text-yellow-800">
+                          Location not available
+                        </span>
+                      </div>
+                      <div className="text-yellow-700">
+                        Your report will be submitted without location data.
+                        This may affect how quickly it can be addressed.
+                      </div>
+                    </div>
+                  </div>
+                ) : null}
+
+                {/* Creator (Optional) */}
+                <FormField
+                  control={form.control}
+                  name="creator"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Your Name (Optional)</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Leave blank to report anonymously"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Submit Button */}
+                <div className="flex gap-4 pt-4">
+                  <Button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="flex-1"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <svg
+                          className="animate-spin -ml-1 mr-2 h-4 w-4"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          ></circle>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
+                        </svg>
+                        Submitting...
+                      </>
+                    ) : (
+                      <>
+                        <svg
+                          className="w-4 h-4 mr-2"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M12 4v16m8-8H4"
+                          />
+                        </svg>
+                        Submit Report
+                      </>
+                    )}
+                  </Button>
+                  <Button asChild variant="outline">
+                    <Link href="/reports">Cancel</Link>
+                  </Button>
+                </div>
+              </form>
+            </Form>
           </div>
         </div>
       </Container>
