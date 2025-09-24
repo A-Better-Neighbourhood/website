@@ -17,8 +17,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { addReport } from "@/actions/reports";
 import { CreateReportSchema, CreateReportType } from "@/schemas/ReportSchema";
+import { useCreateReport } from "@/hooks/useReports";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useState } from "react";
@@ -28,6 +28,8 @@ const AddReportPage = () => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [cameraError, setCameraError] = useState<string | null>(null);
 
+  const createReportMutation = useCreateReport();
+
   const form = useForm<CreateReportType>({
     resolver: zodResolver(CreateReportSchema),
     defaultValues: {
@@ -35,21 +37,16 @@ const AddReportPage = () => {
       description: "",
       image: "",
       location: [0, 0],
-      creator: "",
     },
   });
 
-  const {
-    handleSubmit,
-    setValue,
-    watch,
-    formState: { isSubmitting },
-  } = form;
+  const { handleSubmit, setValue, watch } = form;
   const watchedLocation = watch("location");
+  const isSubmitting = createReportMutation.isPending;
 
   const onSubmit = async (data: CreateReportType) => {
     try {
-      await addReport(data);
+      await createReportMutation.mutateAsync(data);
       setIsSuccess(true);
       form.reset();
     } catch (error) {
@@ -307,24 +304,6 @@ const AddReportPage = () => {
                     </div>
                   </div>
                 ) : null}
-
-                {/* Creator (Optional) */}
-                <FormField
-                  control={form.control}
-                  name="creator"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Your Name (Optional)</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Leave blank to report anonymously"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
 
                 {/* Submit Button */}
                 <div className="flex gap-4 pt-4">

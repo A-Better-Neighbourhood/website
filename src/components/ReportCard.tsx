@@ -1,6 +1,6 @@
 /** @format */
 
-import { Report, ReportStatus } from "@/types/report";
+import { Report, ReportStatus } from "@/types/api";
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -38,7 +38,7 @@ const ReportCard = ({ report }: ReportCardProps) => {
       <div className="bg-white h-full rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer group">
         <div className="relative">
           <Image
-            src={report.image}
+            src={report.imageUrl}
             alt={report.title}
             width={400}
             height={250}
@@ -52,7 +52,7 @@ const ReportCard = ({ report }: ReportCardProps) => {
           <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-full px-2 py-1">
             <UpvoteButton
               reportId={report.id}
-              initialUpvotes={report.upvotes}
+              initialUpvotes={0}
               className="px-1 py-1 rounded-full"
             />
           </div>
@@ -97,11 +97,11 @@ const ReportCard = ({ report }: ReportCardProps) => {
               <div className="flex items-center gap-2">
                 <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
                   <span className="text-white text-xs font-medium">
-                    {report.creator.charAt(0).toUpperCase()}
+                    {report.creator.fullName.charAt(0).toUpperCase()}
                   </span>
                 </div>
                 <span className="text-xs text-gray-600">
-                  by {report.creator}
+                  by {report.creator.fullName}
                 </span>
               </div>
             </div>

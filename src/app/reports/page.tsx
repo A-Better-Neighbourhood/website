@@ -1,13 +1,16 @@
 /** @format */
 
-import { getReports } from "@/actions/reports";
+"use client";
+
 import Container from "@/components/Container";
 import ReportsGridWithFilters from "@/components/ReportsGridWithFilters";
+import { useReports } from "@/hooks/useReports";
+import { ReportStatus } from "@/types/api";
 import Link from "next/link";
 import React from "react";
 
-const ReportsPage = async () => {
-  const reports = await getReports();
+const ReportsPage = () => {
+  const { data: reports, isLoading } = useReports();
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -55,25 +58,34 @@ const ReportsPage = async () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <div className="bg-white rounded-lg p-6 text-center shadow-sm">
             <div className="text-3xl font-bold text-blue-600 mb-2">
-              {reports.length}
+              {isLoading ? "..." : reports?.length || 0}
             </div>
             <div className="text-gray-600">Total Reports</div>
           </div>
           <div className="bg-white rounded-lg p-6 text-center shadow-sm">
             <div className="text-3xl font-bold text-green-600 mb-2">
-              {reports.filter((r) => r.status === "resolved").length}
+              {isLoading
+                ? "..."
+                : reports?.filter((r) => r.status === ReportStatus.RESOLVED)
+                    .length || 0}
             </div>
             <div className="text-gray-600">Resolved</div>
           </div>
           <div className="bg-white rounded-lg p-6 text-center shadow-sm">
             <div className="text-3xl font-bold text-orange-600 mb-2">
-              {reports.filter((r) => r.status === "in_progress").length}
+              {isLoading
+                ? "..."
+                : reports?.filter((r) => r.status === ReportStatus.IN_PROGRESS)
+                    .length || 0}
             </div>
             <div className="text-gray-600">In Progress</div>
           </div>
           <div className="bg-white rounded-lg p-6 text-center shadow-sm">
             <div className="text-3xl font-bold text-yellow-600 mb-2">
-              {reports.filter((r) => r.status === "pending").length}
+              {isLoading
+                ? "..."
+                : reports?.filter((r) => r.status === ReportStatus.PENDING)
+                    .length || 0}
             </div>
             <div className="text-gray-600">Pending</div>
           </div>

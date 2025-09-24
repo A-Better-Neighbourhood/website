@@ -12,7 +12,8 @@ import {
   SelectValue,
 } from "./ui/select";
 import ReportCard from "./ReportCard";
-import { useReports } from "@/hooks/reports";
+import { useReports } from "@/hooks/useReports";
+import { ReportStatus } from "@/types/api";
 
 const ReportsGridWithFilters = () => {
   const { data: reports, isLoading } = useReports();
@@ -65,8 +66,7 @@ const ReportsGridWithFilters = () => {
       {/* Reports Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {reports
-          .sort((a, b) => b.upvotes - a.upvotes)
-          .filter((report) => report.status !== "resolved")
+          .filter((report) => report.status !== ReportStatus.RESOLVED)
           .map((report) => (
             <ReportCard key={report.id} report={report} />
           ))}
