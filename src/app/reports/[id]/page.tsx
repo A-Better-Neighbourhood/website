@@ -106,11 +106,11 @@ const ReportPage = async ({ params }: ReportPageProps) => {
                       <div className="flex items-center gap-1">
                         <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
                           <span className="text-white text-xs font-medium">
-                            {report.creator.charAt(0).toUpperCase()}
+                            {report.creator.fullName.charAt(0).toUpperCase()}
                           </span>
                         </div>
                         <span className="font-medium text-gray-700">
-                          {report.creator}
+                          {report.creator.fullName}
                         </span>
                       </div>
                     </div>
@@ -121,7 +121,7 @@ const ReportPage = async ({ params }: ReportPageProps) => {
               {/* Image */}
               <div className="relative">
                 <Image
-                  src={report.image}
+                  src={report.imageUrl}
                   alt={report.title}
                   width={800}
                   height={400}
@@ -224,7 +224,7 @@ const ReportPage = async ({ params }: ReportPageProps) => {
                     />
                   </svg>
                   <span>
-                    Lat: {report.location[0]}, Lng: {report.location[1]}
+                    Lat: {report.latitude}, Lng: {report.longitude}
                   </span>
                 </div>
                 <div className="bg-gray-100 rounded-lg h-32 flex items-center justify-center text-gray-500">
@@ -263,7 +263,7 @@ const ReportPage = async ({ params }: ReportPageProps) => {
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Updated</span>
                   <span className="font-semibold text-gray-900">
-                    {new Date(report.updatedAt).toLocaleDateString()}
+                    {new Date(report.createdAt).toLocaleDateString()}
                   </span>
                 </div>
               </div>

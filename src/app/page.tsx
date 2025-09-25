@@ -3,6 +3,7 @@
 import { getReports } from "@/actions/reports";
 import Container from "@/components/Container";
 import ReportCard from "@/components/ReportCard";
+import { ReportStatus } from "@/types/api";
 import Link from "next/link";
 
 export default async function Home() {
@@ -79,7 +80,10 @@ export default async function Home() {
               </div>
               <div className="text-center">
                 <div className="text-3xl md:text-4xl font-bold mb-2">
-                  {reports.filter((r) => r.status === "resolved").length}
+                  {
+                    reports.filter((r) => r.status === ReportStatus.PENDING)
+                      .length
+                  }
                 </div>
                 <div className="text-blue-200">Issues Resolved</div>
               </div>

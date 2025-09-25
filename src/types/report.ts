@@ -1,9 +1,9 @@
 /** @format */
 
 export enum ReportStatus {
-  PENDING = "pending",
-  IN_PROGRESS = "in_progress",
-  RESOLVED = "resolved",
+  PENDING = "PENDING",
+  IN_PROGRESS = "IN_PROGRESS",
+  RESOLVED = "RESOLVED",
 }
 
 export type Location = [number, number];

@@ -51,7 +51,6 @@ const AddReportPage = () => {
       form.reset();
     } catch (error) {
       console.error("Failed to submit report:", error);
-      // Handle submission error here
     }
   };
 
