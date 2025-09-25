@@ -6,14 +6,14 @@ import {
   AuthApiResponse,
   UserProfileResponse,
 } from "@/types/api";
-import { apiPost, apiGet, api } from "@/lib/api";
+import { api } from "@/lib/api";
 import axios from "axios";
 
 export async function signUpUser(
   userData: SignUpRequest
 ): Promise<AuthApiResponse> {
   try {
-    const response = await apiPost("/auth/signup", userData);
+    const response = await api.post("/auth/signup", userData);
 
     // Store token if provided
     const authData = response.data as any;
@@ -21,7 +21,7 @@ export async function signUpUser(
       localStorage.setItem("auth_token", authData.token);
     }
 
-    return response as AuthApiResponse;
+    return response.data as AuthApiResponse;
   } catch (error) {
     console.error("Sign up error:", error);
     throw error;
@@ -45,8 +45,8 @@ export async function signInUser(
 
 export async function getUserProfile(): Promise<UserProfileResponse> {
   try {
-    const response = await apiGet("/auth/profile", true);
-    return response as UserProfileResponse;
+    const response = await api.get("/auth/profile");
+    return response.data as UserProfileResponse;
   } catch (error) {
     console.error("Get profile error:", error);
     throw error;
@@ -59,9 +59,6 @@ export async function signOutUser(): Promise<void> {
     if (typeof window !== "undefined") {
       localStorage.removeItem("auth_token");
     }
-
-    // Optionally call backend logout endpoint if it exists
-    // await apiPost('/auth/logout', {}, true);
   } catch (error) {
     console.error("Sign out error:", error);
     throw error;

@@ -2,6 +2,8 @@
 
 import { getReportById } from "@/actions/reports";
 import Container from "@/components/Container";
+import Map from "@/components/Map";
+import { Button } from "@/components/ui/button";
 import UpvoteButton from "@/components/UpvoteButton";
 import { ReportStatus } from "@/types/report";
 import Image from "next/image";
@@ -10,7 +12,7 @@ import { notFound } from "next/navigation";
 import React from "react";
 
 interface ReportPageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 const getStatusBadge = (status: ReportStatus) => {
@@ -39,7 +41,8 @@ const formatDate = (dateString: string) => {
 };
 
 const ReportPage = async ({ params }: ReportPageProps) => {
-  const report = await getReportById(params.id);
+  const { id } = await params;
+  const report = await getReportById(id);
 
   if (!report) {
     notFound();
@@ -227,12 +230,22 @@ const ReportPage = async ({ params }: ReportPageProps) => {
                     Lat: {report.latitude}, Lng: {report.longitude}
                   </span>
                 </div>
-                <div className="bg-gray-100 rounded-lg h-32 flex items-center justify-center text-gray-500">
-                  Map placeholder
+                <div className="bg-gray-100 rounded-lg h-fit flex items-center justify-center text-gray-500">
+                  <Map
+                    zoom={5000}
+                    lat={report.latitude}
+                    lng={report.longitude}
+                  />
                 </div>
-                <button className="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm">
-                  View on Map
-                </button>
+                <Link
+                  href={`https://www.google.com/maps/search/?api=1&query=${report.latitude},${report.longitude}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Button className="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm">
+                    View on Map
+                  </Button>
+                </Link>
               </div>
             </div>
 

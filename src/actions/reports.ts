@@ -9,12 +9,12 @@ import {
   ResolveReportResponse,
   Report,
 } from "@/types/api";
-import { apiGet, apiPost, apiPatch, api } from "@/lib/api";
+import { api } from "@/lib/api";
 
 export const getReports = async (): Promise<Report[]> => {
   try {
-    const response = await apiGet("/issues/");
-    return (response as ReportsListResponse).data || [];
+    const response = await api.get("/issues/");
+    return (response.data as ReportsListResponse).data || [];
   } catch (error) {
     console.error("Get reports error:", error);
     throw error;
@@ -23,8 +23,8 @@ export const getReports = async (): Promise<Report[]> => {
 
 export const getReportById = async (id: string): Promise<Report | null> => {
   try {
-    const response = await apiGet(`/issues/${id}`);
-    return (response as ReportDetailResponse).data || null;
+    const response = await api.get(`/issues/${id}`);
+    return (response.data as ReportDetailResponse).data || null;
   } catch (error) {
     console.error("Get report by ID error:", error);
     throw error;
@@ -33,8 +33,8 @@ export const getReportById = async (id: string): Promise<Report | null> => {
 
 export const getUserReports = async (): Promise<Report[]> => {
   try {
-    const response = await apiGet("/issues/user", true);
-    return (response as ReportsListResponse).data || [];
+    const response = await api.get("/issues/user");
+    return (response.data as ReportsListResponse).data || [];
   } catch (error) {
     console.error("Get user reports error:", error);
     throw error;
@@ -43,8 +43,8 @@ export const getUserReports = async (): Promise<Report[]> => {
 
 export const getUnresolvedReports = async (): Promise<Report[]> => {
   try {
-    const response = await apiGet("/issues/unresolved");
-    return (response as ReportsListResponse).data || [];
+    const response = await api.get("/issues/unresolved");
+    return (response.data as ReportsListResponse).data || [];
   } catch (error) {
     console.error("Get unresolved reports error:", error);
     throw error;
@@ -53,8 +53,8 @@ export const getUnresolvedReports = async (): Promise<Report[]> => {
 
 export const getUserResolvedReports = async (): Promise<Report[]> => {
   try {
-    const response = await apiGet("/issues/user/resolved", true);
-    return (response as ReportsListResponse).data || [];
+    const response = await api.get("/issues/user/resolved");
+    return (response.data as ReportsListResponse).data || [];
   } catch (error) {
     console.error("Get user resolved reports error:", error);
     throw error;
@@ -63,8 +63,8 @@ export const getUserResolvedReports = async (): Promise<Report[]> => {
 
 export const getUserUnresolvedReports = async (): Promise<Report[]> => {
   try {
-    const response = await apiGet("/issues/user/unresolved", true);
-    return (response as ReportsListResponse).data || [];
+    const response = await api.get("/issues/user/unresolved");
+    return (response.data as ReportsListResponse).data || [];
   } catch (error) {
     console.error("Get user unresolved reports error:", error);
     throw error;
@@ -108,8 +108,8 @@ export const addReport = async (data: CreateReportType): Promise<Report> => {
 
 export const resolveReport = async (id: string): Promise<Report> => {
   try {
-    const response = await apiPatch(`/issues/${id}/resolve`, {}, true);
-    return (response as ResolveReportResponse).data!;
+    const response = await api.patch(`/issues/${id}/resolve`, {});
+    return (response.data as ResolveReportResponse).data!;
   } catch (error) {
     console.error("Resolve report error:", error);
     throw error;

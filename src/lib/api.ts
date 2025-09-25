@@ -82,19 +82,3 @@ export async function apiRequest<T = any>(
     );
   }
 }
-
-// Helper functions for common request types
-export const apiGet = <T>(endpoint: string, requireAuth = false) =>
-  apiRequest<T>(endpoint, { method: "GET", requireAuth });
-
-export const apiPost = <T>(endpoint: string, body: any, requireAuth = false) =>
-  apiRequest<T>(endpoint, { method: "POST", body, requireAuth });
-
-export const apiPatch = <T>(
-  endpoint: string,
-  body?: any,
-  requireAuth = false
-) => apiRequest<T>(endpoint, { method: "PATCH", body, requireAuth });
-
-export const apiDelete = <T>(endpoint: string, requireAuth = false) =>
-  apiRequest<T>(endpoint, { method: "DELETE", requireAuth });

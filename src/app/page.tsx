@@ -7,7 +7,7 @@ import { useReports } from "@/hooks/useReports";
 import { ReportStatus } from "@/types/api";
 import Link from "next/link";
 
-export default async function Home() {
+export default function Home() {
   const { data: reports } = useReports();
 
   if (!reports) {
