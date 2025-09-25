@@ -1,8 +1,14 @@
 /** @format */
 
 import { ApiResponse } from "@/types/api";
+import axios from "axios";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3080/api";
+const BASE_URL = "http://localhost:3080/api";
+
+export const api = axios.create({
+  baseURL: BASE_URL,
+  withCredentials: true, // Include cookies for authentication
+});
 
 export class ApiError extends Error {
   constructor(message: string, public status: number, public response?: any) {

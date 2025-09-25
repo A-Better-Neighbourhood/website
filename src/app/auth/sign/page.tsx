@@ -19,8 +19,6 @@ const SignInPage = () => {
     e.preventDefault();
     try {
       await signInMutation.mutateAsync({ phoneNumber, password });
-      // Redirect to reports page or dashboard
-      window.location.href = "/reports";
     } catch (error) {
       console.error("Sign in failed:", error);
     }
