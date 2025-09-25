@@ -50,7 +50,10 @@ export async function apiRequest<T = any>(
   }
 
   try {
-    const response = await fetch(url, requestOptions);
+    const response = await fetch(url, {
+      ...requestOptions,
+      credentials: "include",
+    });
     const data: ApiResponse<T> = await response.json();
 
     if (!response.ok) {
