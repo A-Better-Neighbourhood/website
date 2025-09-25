@@ -7,13 +7,6 @@ import { ReportStatus } from "@/types/api";
 import { Metadata } from "next";
 import Link from "next/link";
 
-export const metadata: Metadata = {
-  title: "ABN - Home",
-  icons: "/SIH2.webp",
-  description:
-    "Empowering Communities: Report, Track, and Resolve Local Issues Together",
-};
-
 export default async function Home() {
   const reports = await getReports();
   const recentReports = reports.slice(0, 3);

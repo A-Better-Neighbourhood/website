@@ -1,7 +1,5 @@
 /** @format */
 
-"use server";
-
 import { CreateReportType } from "@/schemas/ReportSchema";
 import {
   CreateReportRequest,
@@ -11,7 +9,7 @@ import {
   ResolveReportResponse,
   Report,
 } from "@/types/api";
-import { apiGet, apiPost, apiPatch } from "@/lib/api";
+import { apiGet, apiPost, apiPatch, api } from "@/lib/api";
 
 export const getReports = async (): Promise<Report[]> => {
   try {
@@ -82,8 +80,10 @@ export const addReport = async (data: CreateReportType): Promise<Report> => {
       location: data.location,
     };
 
-    const response = await apiPost("/issues/", requestData, true);
-    const apiResponse = response as CreateReportApiResponse;
+    const response = await api.post("/issues/", requestData, {
+      withCredentials: true,
+    });
+    const apiResponse = response.data as CreateReportApiResponse;
 
     // Convert API response to our Report type
     const newReport: Report = {
