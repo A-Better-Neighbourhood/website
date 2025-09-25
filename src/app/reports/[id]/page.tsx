@@ -232,6 +232,7 @@ const ReportPage = async ({ params }: ReportPageProps) => {
                 </div>
                 <div className="bg-gray-100 rounded-lg h-fit flex items-center justify-center text-gray-500">
                   <Map
+                    className="w-full"
                     zoom={5000}
                     lat={report.latitude}
                     lng={report.longitude}

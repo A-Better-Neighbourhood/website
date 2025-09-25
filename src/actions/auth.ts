@@ -7,7 +7,6 @@ import {
   UserProfileResponse,
 } from "@/types/api";
 import { api } from "@/lib/api";
-import axios from "axios";
 
 export async function signUpUser(
   userData: SignUpRequest
