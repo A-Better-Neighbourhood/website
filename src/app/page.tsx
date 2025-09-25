@@ -1,21 +1,23 @@
 /** @format */
+"use client";
 
-import { getReports } from "@/actions/reports";
 import Container from "@/components/Container";
 import ReportCard from "@/components/ReportCard";
+import { useReports } from "@/hooks/useReports";
 import { ReportStatus } from "@/types/api";
-import { Metadata } from "next";
 import Link from "next/link";
 
-export const metadata: Metadata = {
-  title: "ABN - Home",
-  icons: "/SIH2.webp",
-  description:
-    "Empowering Communities: Report, Track, and Resolve Local Issues Together",
-};
-
 export default async function Home() {
-  const reports = await getReports();
+  const { data: reports } = useReports();
+
+  if (!reports) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p>Loading reports...</p>
+      </div>
+    );
+  }
+
   const recentReports = reports.slice(0, 3);
 
   return (
