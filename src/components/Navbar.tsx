@@ -5,6 +5,7 @@
 import React, { useState } from "react";
 import Container from "./Container";
 import Link from "next/link";
+import { useAuth } from "@/hooks/useAuth";
 
 export const navigation = [
   {
@@ -21,6 +22,8 @@ export const navigation = [
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const { user, isLoading } = useAuth();
 
   return (
     <header className="w-full h-16 bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
@@ -102,12 +105,14 @@ const Navbar = () => {
               3
             </span>
           </button>
-          <Link
-            href="/auth/sign"
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium"
-          >
-            Sign In
-          </Link>
+          {!user && (
+            <Link
+              href="/auth/sign"
+              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+            >
+              Sign In
+            </Link>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
