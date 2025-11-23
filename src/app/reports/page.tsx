@@ -22,8 +22,8 @@ const ReportsPage = () => {
               Community Reports
             </h1>
             <p className="text-xl mb-8 text-blue-100 max-w-2xl mx-auto">
-              Together, we make our neighborhood better. Report issues, track
-              progress, and see real change happen.
+              Together, we make our neighborhood better. Report, track progress,
+              and see real change happen.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link

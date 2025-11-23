@@ -35,7 +35,7 @@ export default function Home() {
               Neighbourhood Together
             </h1>
             <p className="text-xl md:text-2xl mb-8 text-blue-100 leading-relaxed">
-              Report issues, track progress, and see real change happen in your
+              Report, track progress, and see real change happen in your
               community. Every voice matters in creating the neighborhood we all
               deserve.
             </p>
@@ -95,7 +95,7 @@ export default function Home() {
                       .length
                   }
                 </div>
-                <div className="text-blue-200">Issues Resolved</div>
+                <div className="text-blue-200">Report Resolved</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl md:text-4xl font-bold mb-2">
@@ -170,7 +170,7 @@ export default function Home() {
                 2. Engage
               </h3>
               <p className="text-gray-600 leading-relaxed">
-                Community members upvote important issues, share experiences,
+                Community members upvote important reports, share experiences,
                 and track progress together as a unified voice.
               </p>
             </div>

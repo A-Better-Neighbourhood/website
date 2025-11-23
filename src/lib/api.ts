@@ -1,7 +1,6 @@
 /** @format */
 
 import axios from "axios";
-import { toast } from "sonner";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3080/api";
 
@@ -9,16 +8,6 @@ export const api = axios.create({
   baseURL: BASE_URL,
   withCredentials: true, // Include cookies for authentication
 });
-
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    toast.error(
-      error.response?.data?.message || "An unexpected error occurred"
-    );
-    return Promise.reject(error);
-  }
-);
 
 export class ApiError extends Error {
   constructor(message: string, public status: number, public response?: any) {
