@@ -13,7 +13,7 @@ import { api } from "@/lib/api";
 
 export const getReports = async (): Promise<Report[]> => {
   try {
-    const response = await api.get("/reports/");
+    const response = await api.get("/reports");
     return (response.data as ReportsListResponse).data || [];
   } catch (error) {
     console.error("Get reports error:", error);
