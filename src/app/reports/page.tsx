@@ -15,20 +15,22 @@ const ReportsPage = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
-        <Container className="py-16">
+      <div className="bg-slate-900 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-10"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/40 via-slate-900 to-slate-900"></div>
+        <Container className="py-16 relative z-10">
           <div className="text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white">
               Community Reports
             </h1>
-            <p className="text-xl mb-8 text-blue-100 max-w-2xl mx-auto">
+            <p className="text-xl mb-8 text-slate-300 max-w-2xl mx-auto">
               Together, we make our neighborhood better. Report, track progress,
               and see real change happen.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/reports/add"
-                className="bg-white text-blue-600 px-8 py-3 rounded-full font-semibold hover:bg-blue-50 transition-colors inline-flex items-center gap-2"
+                className="bg-emerald-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-emerald-500 transition-colors inline-flex items-center gap-2 shadow-lg shadow-emerald-900/20"
               >
                 <svg
                   className="w-5 h-5"
@@ -45,7 +47,7 @@ const ReportsPage = () => {
                 </svg>
                 Report an Issue
               </Link>
-              <button className="border-2 border-white text-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-blue-600 transition-colors">
+              <button className="border-2 border-slate-700 text-white px-8 py-3 rounded-full font-semibold hover:bg-slate-800 transition-colors">
                 Learn More
               </button>
             </div>

@@ -11,16 +11,17 @@ interface ReportCardProps {
 }
 
 const getStatusBadge = (status: ReportStatus) => {
-  const baseClasses = "px-2 py-1 rounded-full text-xs font-medium";
+  const baseClasses =
+    "px-2.5 py-1 rounded-full text-xs font-semibold shadow-sm border";
   switch (status) {
     case ReportStatus.PENDING:
-      return `${baseClasses} bg-yellow-100 text-yellow-800`;
+      return `${baseClasses} bg-amber-50 text-amber-700 border-amber-200`;
     case ReportStatus.IN_PROGRESS:
-      return `${baseClasses} bg-blue-100 text-blue-800`;
+      return `${baseClasses} bg-blue-50 text-blue-700 border-blue-200`;
     case ReportStatus.RESOLVED:
-      return `${baseClasses} bg-green-100 text-green-800`;
+      return `${baseClasses} bg-emerald-50 text-emerald-700 border-emerald-200`;
     default:
-      return `${baseClasses} bg-gray-100 text-gray-800`;
+      return `${baseClasses} bg-slate-50 text-slate-700 border-slate-200`;
   }
 };
 
@@ -35,21 +36,21 @@ const formatDate = (dateString: string) => {
 const ReportCard = ({ report }: ReportCardProps) => {
   return (
     <Link href={`/reports/${report.id}`}>
-      <div className="bg-white h-full rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer group">
+      <div className="bg-white h-full rounded-xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer group">
         <div className="relative">
           <Image
             src={report.imageUrl}
             alt={report.title}
             width={400}
             height={250}
-            className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+            className="w-full h-52 object-cover group-hover:scale-105 transition-transform duration-500"
           />
           <div className="absolute top-3 left-3">
             <span className={getStatusBadge(report.status)}>
               {report.status.replace("_", " ").toUpperCase()}
             </span>
           </div>
-          <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-full px-2 py-1">
+          <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-md rounded-full px-2 py-1 shadow-sm">
             <UpvoteButton
               reportId={report.id}
               initialUpvotes={0}
@@ -58,15 +59,15 @@ const ReportCard = ({ report }: ReportCardProps) => {
           </div>
         </div>
 
-        <div className="p-4">
-          <h3 className="font-bold text-lg text-gray-900 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">
+        <div className="p-5">
+          <h3 className="font-bold text-lg text-slate-900 mb-2 line-clamp-2 group-hover:text-emerald-600 transition-colors">
             {report.title}
           </h3>
-          <p className="text-gray-600 text-sm line-clamp-2 mb-3">
+          <p className="text-slate-600 text-sm line-clamp-2 mb-4 leading-relaxed">
             {report.description}
           </p>
 
-          <div className="flex items-center justify-between text-xs text-gray-500">
+          <div className="flex items-center justify-between text-xs text-slate-500">
             <div className="flex items-center gap-2">
               <svg
                 className="w-4 h-4"
@@ -87,20 +88,20 @@ const ReportCard = ({ report }: ReportCardProps) => {
                   d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                 />
               </svg>
-              <span>#{report.id.split("-")[1]}</span>
+              <span className="font-medium">#{report.id.split("-")[1]}</span>
             </div>
             <span>{formatDate(report.createdAt)}</span>
           </div>
 
           {report.creator && (
-            <div className="mt-3 pt-3 border-t border-gray-100">
+            <div className="mt-4 pt-4 border-t border-slate-100">
               <div className="flex items-center gap-2">
-                <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
-                  <span className="text-white text-xs font-medium">
+                <div className="w-6 h-6 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center">
+                  <span className="text-xs font-bold">
                     {report.creator.fullName.charAt(0).toUpperCase()}
                   </span>
                 </div>
-                <span className="text-xs text-gray-600">
+                <span className="text-xs text-slate-600 font-medium">
                   by {report.creator.fullName}
                 </span>
               </div>

@@ -19,6 +19,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { CreateReportSchema, CreateReportType } from "@/schemas/ReportSchema";
 import { useCreateReport } from "@/hooks/useReports";
+import { useAuth } from "@/hooks/useAuth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useState } from "react";
@@ -28,6 +29,7 @@ const AddReportPage = () => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [cameraError, setCameraError] = useState<string | null>(null);
 
+  const { user, isLoading } = useAuth();
   const createReportMutation = useCreateReport();
 
   const form = useForm<CreateReportType>({
@@ -69,14 +71,69 @@ const AddReportPage = () => {
     setCameraError(error);
   };
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600"></div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <Container>
+          <div className="max-w-md mx-auto bg-white rounded-xl shadow-sm border border-slate-200 p-8 text-center">
+            <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg
+                className="w-8 h-8 text-slate-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                />
+              </svg>
+            </div>
+            <h1 className="text-2xl font-bold text-slate-900 mb-2">
+              Sign In Required
+            </h1>
+            <p className="text-slate-600 mb-6">
+              Please sign in to report an issue. Your account helps us track and
+              verify reports in the community.
+            </p>
+            <div className="space-y-3">
+              <Link
+                href="/auth/sign"
+                className="block w-full px-6 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors font-medium shadow-sm"
+              >
+                Sign In
+              </Link>
+              <Link
+                href="/reports"
+                className="block w-full px-6 py-3 text-slate-600 hover:bg-slate-50 rounded-lg transition-colors"
+              >
+                Return to Reports
+              </Link>
+            </div>
+          </div>
+        </Container>
+      </div>
+    );
+  }
+
   if (isSuccess) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
         <Container>
-          <div className="max-w-md mx-auto bg-white rounded-xl shadow-sm border border-gray-200 p-8 text-center">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="max-w-md mx-auto bg-white rounded-xl shadow-sm border border-slate-200 p-8 text-center">
+            <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <svg
-                className="w-8 h-8 text-green-600"
+                className="w-8 h-8 text-emerald-600"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -89,23 +146,23 @@ const AddReportPage = () => {
                 />
               </svg>
             </div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">
+            <h1 className="text-2xl font-bold text-slate-900 mb-2">
               Report Submitted!
             </h1>
-            <p className="text-gray-600 mb-6">
+            <p className="text-slate-600 mb-6">
               Thank you for helping improve our community. Your report has been
               submitted and will be reviewed soon.
             </p>
             <div className="space-y-3">
               <Link
                 href="/reports"
-                className="block w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                className="block w-full px-6 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors font-medium shadow-sm"
               >
                 View All Reports
               </Link>
               <button
                 onClick={() => setIsSuccess(false)}
-                className="block w-full px-6 py-3 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                className="block w-full px-6 py-3 text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
               >
                 Submit Another Report
               </button>
@@ -117,15 +174,15 @@ const AddReportPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-slate-50">
       <Container className="py-8">
         {/* Breadcrumb */}
         <nav className="mb-6">
-          <ol className="flex items-center space-x-2 text-sm text-gray-500">
+          <ol className="flex items-center space-x-2 text-sm text-slate-500">
             <li>
               <Link
                 href="/reports"
-                className="hover:text-blue-600 transition-colors"
+                className="hover:text-emerald-600 transition-colors"
               >
                 Reports
               </Link>
@@ -139,24 +196,24 @@ const AddReportPage = () => {
                 />
               </svg>
             </li>
-            <li className="text-gray-900 font-medium">Add Report</li>
+            <li className="text-slate-900 font-medium">Add Report</li>
           </ol>
         </nav>
 
         <div className="max-w-2xl mx-auto">
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            <h1 className="text-3xl font-bold text-slate-900 mb-2">
               Report an Issue
             </h1>
-            <p className="text-gray-600">
+            <p className="text-slate-600">
               Help improve your community by reporting issues that need
               attention
             </p>
           </div>
 
           {/* Form */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
             <Form {...form}>
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 {/* Title */}
@@ -172,6 +229,7 @@ const AddReportPage = () => {
                         <Input
                           placeholder="Brief description of the issue"
                           {...field}
+                          className="border-slate-200 focus:border-emerald-500 focus:ring-emerald-500"
                         />
                       </FormControl>
                       <FormMessage />
@@ -193,6 +251,7 @@ const AddReportPage = () => {
                           placeholder="Provide more details about the issue..."
                           rows={4}
                           {...field}
+                          className="border-slate-200 focus:border-emerald-500 focus:ring-emerald-500"
                         />
                       </FormControl>
                       <FormMessage />
@@ -205,7 +264,7 @@ const AddReportPage = () => {
                   <Label>
                     Photo & Location <span className="text-red-500">*</span>
                   </Label>
-                  <p className="text-sm text-gray-600 mb-4">
+                  <p className="text-sm text-slate-600 mb-4">
                     Take a photo of the issue to automatically capture both the
                     image and your current location. This ensures authenticity
                     and helps us locate the problem precisely.
@@ -239,10 +298,10 @@ const AddReportPage = () => {
                   <div className="space-y-2">
                     <Label>Location Preview</Label>
                     <div className="space-y-3">
-                      <div className="text-sm text-gray-600 p-3 bg-green-50 rounded-lg">
+                      <div className="text-sm text-slate-600 p-3 bg-emerald-50 rounded-lg border border-emerald-100">
                         <div className="flex items-center gap-2 mb-1">
                           <svg
-                            className="w-4 h-4 text-green-600"
+                            className="w-4 h-4 text-emerald-600"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -254,11 +313,11 @@ const AddReportPage = () => {
                               d="M5 13l4 4L19 7"
                             />
                           </svg>
-                          <span className="font-medium text-green-800">
+                          <span className="font-medium text-emerald-800">
                             Location captured successfully!
                           </span>
                         </div>
-                        <div className="text-green-700">
+                        <div className="text-emerald-700">
                           <strong>Coordinates:</strong>{" "}
                           {watchedLocation[0].toFixed(6)},{" "}
                           {watchedLocation[1].toFixed(6)}
@@ -268,7 +327,7 @@ const AddReportPage = () => {
                         lat={watchedLocation[0]}
                         lng={watchedLocation[1]}
                         height="200px"
-                        className="border border-gray-200"
+                        className="border border-slate-200 rounded-lg"
                       />
                     </div>
                   </div>
@@ -277,10 +336,10 @@ const AddReportPage = () => {
                   form.watch("image") ? (
                   <div className="space-y-2">
                     <Label>Location Status</Label>
-                    <div className="text-sm text-gray-600 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                    <div className="text-sm text-slate-600 p-3 bg-amber-50 border border-amber-200 rounded-lg">
                       <div className="flex items-center gap-2 mb-1">
                         <svg
-                          className="w-4 h-4 text-yellow-600"
+                          className="w-4 h-4 text-amber-600"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -292,11 +351,11 @@ const AddReportPage = () => {
                             d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.864-.833-2.634 0L3.167 16.5c-.77.833.192 2.5 1.732 2.5z"
                           />
                         </svg>
-                        <span className="font-medium text-yellow-800">
+                        <span className="font-medium text-amber-800">
                           Location not available
                         </span>
                       </div>
-                      <div className="text-yellow-700">
+                      <div className="text-amber-700">
                         Your report will be submitted without location data.
                         This may affect how quickly it can be addressed.
                       </div>
@@ -309,7 +368,7 @@ const AddReportPage = () => {
                   <Button
                     type="submit"
                     disabled={isSubmitting}
-                    className="flex-1"
+                    className="flex-1 bg-emerald-600 hover:bg-emerald-700"
                   >
                     {isSubmitting ? (
                       <>
@@ -353,7 +412,11 @@ const AddReportPage = () => {
                       </>
                     )}
                   </Button>
-                  <Button asChild variant="outline">
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="border-slate-200 hover:bg-slate-50 text-slate-700"
+                  >
                     <Link href="/reports">Cancel</Link>
                   </Button>
                 </div>
