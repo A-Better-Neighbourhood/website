@@ -12,7 +12,7 @@ import {
   SelectValue,
 } from "./ui/select";
 import ReportCard from "./ReportCard";
-import { useReports } from "@/hooks/useReports";
+import { useReports } from "@/hooks/reports/useReports";
 import { ReportStatus } from "@/types/api";
 
 const ReportsGridWithFilters = () => {

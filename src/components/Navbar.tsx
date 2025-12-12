@@ -30,7 +30,7 @@ const Navbar = () => {
       <Container className="flex items-center justify-between w-full h-full">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+          <div className="w-8 h-8 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-lg flex items-center justify-center shadow-sm">
             <svg
               className="w-5 h-5 text-white"
               fill="none"
@@ -46,14 +46,14 @@ const Navbar = () => {
             </svg>
           </div>
           <div className="hidden sm:block">
-            <span className="text-xl font-bold text-gray-900">A Better</span>
-            <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <span className="text-xl font-bold text-slate-900">A Better</span>
+            <span className="text-xl font-bold text-emerald-600">
               {" "}
               Neighbourhood
             </span>
           </div>
           <div className="sm:hidden">
-            <span className="text-xl font-bold text-gray-900">ABN</span>
+            <span className="text-xl font-bold text-slate-900">ABN</span>
           </div>
         </Link>
 
@@ -63,7 +63,7 @@ const Navbar = () => {
             <Link
               key={item.name}
               href={item.href}
-              className="text-gray-700 hover:text-blue-600 transition-colors font-medium"
+              className="text-slate-600 hover:text-emerald-600 transition-colors font-medium"
             >
               {item.name}
             </Link>
@@ -72,7 +72,7 @@ const Navbar = () => {
 
         {/* Desktop Actions */}
         <div className="hidden md:flex items-center gap-4">
-          <button className="text-gray-600 hover:text-gray-900 transition-colors">
+          <button className="text-slate-600 hover:text-slate-900 transition-colors">
             <svg
               className="w-5 h-5"
               fill="none"
@@ -87,7 +87,7 @@ const Navbar = () => {
               />
             </svg>
           </button>
-          <button className="text-gray-600 hover:text-gray-900 transition-colors relative">
+          <button className="text-slate-600 hover:text-slate-900 transition-colors relative">
             <svg
               className="w-5 h-5"
               fill="none"
@@ -101,14 +101,14 @@ const Navbar = () => {
                 d="M15 17h5l-5 5-5-5h5z M15 1h5l-5-5-5 5h5z"
               />
             </svg>
-            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+            <span className="absolute -top-2 -right-2 bg-amber-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
               3
             </span>
           </button>
           {!user && (
             <Link
               href="/auth/sign"
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+              className="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition-colors font-medium shadow-sm"
             >
               Sign In
             </Link>
@@ -154,21 +154,21 @@ const Navbar = () => {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="block text-gray-700 hover:text-blue-600 transition-colors font-medium"
+                  className="block text-slate-700 hover:text-emerald-600 transition-colors font-medium"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   <div>
                     <div className="font-medium">{item.name}</div>
-                    <div className="text-sm text-gray-500">
+                    <div className="text-sm text-slate-500">
                       {item.description}
                     </div>
                   </div>
                 </Link>
               ))}
-              <div className="pt-4 border-t border-gray-200">
+              <div className="pt-4 border-t border-slate-200">
                 <Link
                   href="/auth/sign"
-                  className="block w-full bg-blue-600 text-white px-4 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium text-center"
+                  className="block w-full bg-emerald-600 text-white px-4 py-3 rounded-lg hover:bg-emerald-700 transition-colors font-medium text-center shadow-sm"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Sign In

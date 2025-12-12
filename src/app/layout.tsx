@@ -20,8 +20,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "ABN - Home",
   icons: "/SIH2.webp",
-  description:
-    "Empowering Communities: Report, Track, and Resolve Local Issues Together",
+  description: "Empowering Communities: Report, Track, and Resolve Together",
 };
 
 export default function RootLayout({
