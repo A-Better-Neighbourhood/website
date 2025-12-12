@@ -10,6 +10,8 @@ const nextConfig: NextConfig = {
       "res.cloudinary.com",
       "picsum.photos",
       "example.com",
+      "utfs.io",
+      "ufeygtntyrvpaawugjia.supabase.co",
     ],
   },
 };
