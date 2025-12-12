@@ -201,7 +201,7 @@ const ReportIssueLayout: React.FC<ReportIssueLayoutProps> = ({
                             <Image
                               src={img}
                               alt="Report attachment"
-                              objectFit="contain"
+                              objectFit="cover"
                               fill
                               className="bg-gray-50"
                             />

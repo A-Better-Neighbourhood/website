@@ -59,7 +59,7 @@ const CommentBox: React.FC<CommentBoxProps> = ({ reportId }) => {
       <form onSubmit={handleSubmit} className="p-4">
         <textarea
           className="w-full min-h-[100px] p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all resize-y text-sm mb-3"
-          placeholder="Leave a comment... (Markdown supported)"
+          placeholder="Leave a comment..."
           value={text}
           onChange={(e) => setText(e.target.value)}
           disabled={isSubmitting}
