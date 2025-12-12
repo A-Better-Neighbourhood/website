@@ -39,7 +39,7 @@ const ReportCard = ({ report }: ReportCardProps) => {
       <div className="bg-white h-full rounded-xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer group">
         <div className="relative">
           <Image
-            src={report.imageUrl}
+            src={report.imageUrl[0] || "/placeholder.jpg"}
             alt={report.title}
             width={400}
             height={250}

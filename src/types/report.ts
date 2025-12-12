@@ -12,9 +12,14 @@ export interface Report {
   id: string;
   title: string;
   description: string;
-  image: string;
+  imageUrl: string[];
   location: Location;
-  creator?: string;
+  category: string;
+  creator?: {
+    id: string;
+    fullName: string;
+    role: string;
+  };
   status: ReportStatus;
   upvotes: number;
   createdAt: string;

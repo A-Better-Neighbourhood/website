@@ -4,7 +4,7 @@
 
 import Container from "@/components/Container";
 import ReportsGridWithFilters from "@/components/ReportsGridWithFilters";
-import { useReports } from "@/hooks/useReports";
+import { useReports } from "@/hooks/reports/useReports";
 import { ReportStatus } from "@/types/api";
 import Link from "next/link";
 import React from "react";

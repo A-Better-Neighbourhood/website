@@ -29,11 +29,9 @@ const UpvoteButton = ({
 
     setIsLoading(true);
     try {
-      const updatedReport = await upvoteReport(reportId);
-      if (updatedReport) {
-        setUpvotes(updatedReport.upvotes);
-        setHasUpvoted(true);
-      }
+      await upvoteReport(reportId);
+      setUpvotes((prev) => prev + 1);
+      setHasUpvoted(true);
     } catch (error) {
       console.error("Failed to upvote:", error);
     } finally {

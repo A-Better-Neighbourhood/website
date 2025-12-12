@@ -3,7 +3,7 @@
 
 import Container from "@/components/Container";
 import ReportCard from "@/components/ReportCard";
-import { useReports } from "@/hooks/useReports";
+import { useReports } from "@/hooks/reports/useReports";
 import { ReportStatus } from "@/types/api";
 import Link from "next/link";
 

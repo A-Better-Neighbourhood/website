@@ -16,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { CreateReportSchema, CreateReportType } from "@/schemas/ReportSchema";
-import { useCreateReport } from "@/hooks/useReports";
+import { useCreateReport } from "@/hooks/reports/useReportMutations";
 import { useAuth } from "@/hooks/useAuth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
