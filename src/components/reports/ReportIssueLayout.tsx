@@ -34,6 +34,8 @@ const getStatusBadge = (status: ReportStatus) => {
       return `${baseClasses} bg-blue-100 text-blue-800 border-blue-200`;
     case ReportStatus.RESOLVED:
       return `${baseClasses} bg-purple-100 text-purple-800 border-purple-200`; // GitHub merged/closed style
+    case ReportStatus.ARCHIVED:
+      return `${baseClasses} bg-gray-100 text-gray-600 border-gray-300`;
     default:
       return `${baseClasses} bg-gray-100 text-gray-800 border-gray-200`;
   }
@@ -60,6 +62,11 @@ const ReportIssueLayout: React.FC<ReportIssueLayoutProps> = ({
   };
 
   const handleUpvote = () => {
+    if (
+      currentReport.status === ReportStatus.RESOLVED ||
+      currentReport.hasLiked
+    )
+      return;
     upvoteMutation.mutate(reportId);
   };
 
@@ -72,9 +79,6 @@ const ReportIssueLayout: React.FC<ReportIssueLayoutProps> = ({
             <div className="flex items-center gap-3 mb-2">
               <h1 className="text-3xl font-bold text-gray-900">
                 {currentReport.title}
-                <span className="text-gray-400 font-light ml-3">
-                  #{currentReport.id.split("-")[1] || currentReport.id}
-                </span>
               </h1>
             </div>
             <div className="flex items-center flex-wrap gap-3 text-sm text-gray-600">
@@ -123,23 +127,49 @@ const ReportIssueLayout: React.FC<ReportIssueLayoutProps> = ({
           </div>
 
           <div className="flex items-center gap-3">
-            <Button
-              variant="outline"
-              onClick={handleUpvote}
-              className="flex items-center gap-2 border-gray-300 hover:bg-gray-50"
-            >
-              <svg
-                className="w-4 h-4 text-gray-500"
-                fill="currentColor"
-                viewBox="0 0 20 20"
+            {currentReport.status === ReportStatus.ARCHIVED ? (
+              <Link href={`/reports/${currentReport.originalReportId}`}>
+                <Button variant="outline">
+                  Merged with #
+                  {currentReport?.originalReportId?.split("-")[1] ||
+                    currentReport.originalReportId}
+                </Button>
+              </Link>
+            ) : (
+              <Button
+                variant={currentReport.hasLiked ? "default" : "outline"}
+                onClick={handleUpvote}
+                disabled={
+                  currentReport.status === ReportStatus.RESOLVED ||
+                  currentReport.hasLiked
+                }
+                className={`flex items-center gap-2 transition-colors ${
+                  currentReport.hasLiked
+                    ? ""
+                    : "border-gray-300 hover:bg-gray-50 text-gray-700"
+                }`}
               >
-                <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
-              </svg>
-              Upvote
-              <span className="ml-1 bg-gray-100 text-gray-600 py-0.5 px-2 rounded-full text-xs font-semibold">
-                {currentReport.upvotes}
-              </span>
-            </Button>
+                <svg
+                  className={`w-4 h-4 ${
+                    currentReport.hasLiked ? "text-white" : "text-gray-500"
+                  }`}
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
+                </svg>
+                {currentReport.hasLiked ? "Upvoted" : "Upvote"}
+                <span
+                  className={`ml-1 py-0.5 px-2 rounded-full text-xs font-semibold ${
+                    currentReport.hasLiked
+                      ? "bg-white/20 text-white"
+                      : "bg-gray-100 text-gray-600"
+                  }`}
+                >
+                  {currentReport.upvotes}
+                </span>
+              </Button>
+            )}
             <Link href="/reports/add">
               <Button className="bg-green-600 hover:bg-green-700 text-white">
                 New Issue
@@ -151,11 +181,11 @@ const ReportIssueLayout: React.FC<ReportIssueLayoutProps> = ({
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         {/* Left Column: Timeline */}
-        <div className="lg:col-span-3 space-y-6">
+        <div className="lg:col-span-3">
           {/* Main Description as First "Comment" */}
-          <div className="flex gap-4 py-4 relative group">
+          <div className="flex gap-4 pb-0 relative group">
             {/* Timeline connector */}
-            <div className="absolute left-0 top-0 bottom-0 w-px bg-gray-200 ml-4 -z-10"></div>
+            <div className="absolute top-0 bottom-0 w-px bg-gray-200 left-[20px] -z-10"></div>
 
             {/* Avatar */}
             <div className="flex-shrink-0 z-10">
@@ -219,38 +249,51 @@ const ReportIssueLayout: React.FC<ReportIssueLayoutProps> = ({
           ))}
 
           {/* Comment Composer */}
-          <div className="flex gap-4 pt-6 relative">
-            <div className="flex-shrink-0">
-              <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
-                {/* Current User Avatar Placeholder */}
-                <svg
-                  className="w-5 h-5 text-gray-400"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                    clipRule="evenodd"
-                  />
-                </svg>
+          {currentReport.status !== ReportStatus.ARCHIVED && (
+            <div className="flex gap-4 pt-6 relative">
+              <div className="flex-shrink-0">
+                <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
+                  {/* Current User Avatar Placeholder */}
+                  <svg
+                    className="w-5 h-5 text-gray-400"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <div className="flex-1">
+                {currentReport.status === ReportStatus.RESOLVED ? (
+                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 text-center text-gray-500 text-sm">
+                    This issue has been marked as resolved. Comments are
+                    disabled.
+                  </div>
+                ) : (
+                  <CommentBox reportId={reportId} />
+                )}
               </div>
             </div>
-            <div className="flex-1">
-              <CommentBox reportId={reportId} />
-            </div>
-          </div>
+          )}
         </div>
 
         {/* Right Sidebar */}
         <div className="lg:col-span-1 space-y-6">
           {/* Sidebar Groups */}
-          <div className="border-b border-gray-200 pb-4">
-            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
-              Assignees
-            </h3>
-            <div className="text-sm text-gray-500 italic">No one assigned</div>
-          </div>
+          {currentReport.status !== ReportStatus.ARCHIVED && (
+            <div className="border-b border-gray-200 pb-4">
+              <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
+                Assignees
+              </h3>
+              <div className="text-sm text-gray-500 italic">
+                No one assigned
+              </div>
+            </div>
+          )}
 
           <div className="border-b border-gray-200 pb-4">
             <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
@@ -293,7 +336,8 @@ const ReportIssueLayout: React.FC<ReportIssueLayoutProps> = ({
 
           {/* Actions */}
           <div className="pt-2 space-y-2">
-            {currentReport.status !== ReportStatus.RESOLVED ? (
+            {currentReport.status !== ReportStatus.RESOLVED &&
+            currentReport.status !== ReportStatus.ARCHIVED ? (
               <button
                 onClick={handleResolve}
                 className="w-full text-left text-sm text-gray-700 hover:text-blue-600 py-1"

@@ -3,7 +3,6 @@
 import { getReportById, getReportActivities } from "@/actions/reports";
 import ReportIssueLayout from "@/components/reports/ReportIssueLayout";
 import { notFound } from "next/navigation";
-import React from "react";
 
 interface ReportPageProps {
   params: Promise<{ id: string }>;

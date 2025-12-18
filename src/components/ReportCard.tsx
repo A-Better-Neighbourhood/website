@@ -51,11 +51,6 @@ const ReportCard = ({ report }: ReportCardProps) => {
             <span className={getStatusBadge(report.status)}>
               {report.status.replace("_", " ").toUpperCase()}
             </span>
-            {report.category && (
-              <span className="px-2.5 py-1 rounded-full text-xs font-semibold shadow-sm border bg-slate-800 text-white border-slate-700 backdrop-blur-md">
-                {report.category.replace("_", " ")}
-              </span>
-            )}
           </div>
           <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-md rounded-full px-2 py-1 shadow-sm z-10">
             <UpvoteButton
@@ -77,9 +72,6 @@ const ReportCard = ({ report }: ReportCardProps) => {
 
           <div className="flex items-center justify-between text-xs text-slate-500 mt-auto pt-4 border-t border-slate-100">
             <div className="flex items-center gap-2">
-              <span className="font-medium bg-slate-100 px-2 py-1 rounded-md">
-                #{report.id.split("-")[1] || report.id.slice(0, 6)}
-              </span>
               <span>{formatDate(report.createdAt)}</span>
             </div>
 

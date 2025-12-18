@@ -121,11 +121,7 @@ const SignUpPage = () => {
               </FieldGroup>
             </FieldSet>
 
-            <Button
-              type="submit"
-              disabled={signUpMutation.isPending}
-              className="w-full bg-emerald-600 text-white py-3 px-4 rounded-lg hover:bg-emerald-700 transition-colors font-medium disabled:opacity-50 shadow-sm"
-            >
+            <Button type="submit" disabled={signUpMutation.isPending}>
               {signUpMutation.isPending
                 ? "Creating Account..."
                 : "Create Account"}
