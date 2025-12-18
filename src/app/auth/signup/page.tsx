@@ -6,32 +6,38 @@ import Container from "@/components/Container";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/PasswordInput";
-import {
-  Field,
-  FieldGroup,
-  FieldLabel,
-  FieldSet,
-  FieldLegend,
-} from "@/components/ui/field";
-import { useSignIn } from "@/hooks/useAuth";
+import { Field, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
+import { useSignUp } from "@/hooks/useAuth";
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
-const SignInPage = () => {
+const SignUpPage = () => {
+  const [name, setName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [address, setAddress] = useState("");
   const [password, setPassword] = useState("");
-  const signInMutation = useSignIn();
+  const signUpMutation = useSignUp();
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await signInMutation.mutateAsync({ phoneNumber, password });
+      await signUpMutation.mutateAsync({
+        name,
+        phoneNumber,
+        address,
+        password,
+      });
+      // Redirect to home or reports after successful signup
+      router.push("/reports");
     } catch (error) {
-      console.error("Sign in failed:", error);
+      console.error("Sign up failed:", error);
     }
   };
+
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+    <div className="min-h-screen bg-slate-50 flex items-center justify-center py-12">
       <Container>
         <div className="max-w-md mx-auto bg-white rounded-xl shadow-sm border border-slate-200 p-8">
           <div className="text-center mb-8">
@@ -46,21 +52,34 @@ const SignInPage = () => {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                  d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
                 />
               </svg>
             </div>
             <h1 className="text-2xl font-bold text-slate-900 mb-2">
-              Welcome Back
+              Create Account
             </h1>
             <p className="text-slate-600">
-              Sign in to your A Better Neighbourhood account
+              Join your community and start making a difference
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <FieldSet>
               <FieldGroup>
+                <Field>
+                  <FieldLabel htmlFor="name">Full Name</FieldLabel>
+                  <Input
+                    type="text"
+                    id="name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="John Doe"
+                    required
+                    className="border-slate-200 focus:border-emerald-500 focus:ring-emerald-500"
+                  />
+                </Field>
+
                 <Field>
                   <FieldLabel htmlFor="phoneNumber">Phone Number</FieldLabel>
                   <Input
@@ -76,12 +95,25 @@ const SignInPage = () => {
                 </Field>
 
                 <Field>
+                  <FieldLabel htmlFor="address">Address</FieldLabel>
+                  <Input
+                    type="text"
+                    id="address"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                    placeholder="Your residential address"
+                    required
+                    className="border-slate-200 focus:border-emerald-500 focus:ring-emerald-500"
+                  />
+                </Field>
+
+                <Field>
                   <FieldLabel htmlFor="password">Password</FieldLabel>
                   <PasswordInput
                     id="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Enter your password"
+                    placeholder="Create a strong password"
                     required
                     className="border-slate-200 focus:border-emerald-500 focus:ring-emerald-500"
                   />
@@ -89,28 +121,21 @@ const SignInPage = () => {
               </FieldGroup>
             </FieldSet>
 
-            <div className="flex items-center justify-between">
-              <Link
-                href="#"
-                className="text-sm text-emerald-600 hover:text-emerald-500 ml-auto"
-              >
-                Forgot password?
-              </Link>
-            </div>
-
             <Button
               type="submit"
-              disabled={signInMutation.isPending}
+              disabled={signUpMutation.isPending}
               className="w-full bg-emerald-600 text-white py-3 px-4 rounded-lg hover:bg-emerald-700 transition-colors font-medium disabled:opacity-50 shadow-sm"
             >
-              {signInMutation.isPending ? "Signing In..." : "Sign In"}
+              {signUpMutation.isPending
+                ? "Creating Account..."
+                : "Create Account"}
             </Button>
 
-            {signInMutation.error && (
+            {signUpMutation.error && (
               <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
                 <p className="text-sm text-red-600">
-                  {signInMutation.error.message ||
-                    "Sign in failed. Please try again."}
+                  {signUpMutation.error.message ||
+                    "Sign up failed. Please try again."}
                 </p>
               </div>
             )}
@@ -118,12 +143,12 @@ const SignInPage = () => {
 
           <div className="mt-6 text-center">
             <p className="text-sm text-slate-600">
-              Don&apos;t have an account?{" "}
+              Already have an account?{" "}
               <Link
-                href="/auth/signup"
+                href="/auth/sign"
                 className="text-emerald-600 hover:text-emerald-500 font-medium"
               >
-                Sign up for free
+                Sign in
               </Link>
             </p>
           </div>
@@ -142,4 +167,4 @@ const SignInPage = () => {
   );
 };
 
-export default SignInPage;
+export default SignUpPage;

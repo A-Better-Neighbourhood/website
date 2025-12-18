@@ -3,7 +3,7 @@
 
 import Container from "@/components/Container";
 import ReportCard from "@/components/ReportCard";
-import { useReports } from "@/hooks/useReports";
+import { useReports } from "@/hooks/reports/useReports";
 import { ReportStatus } from "@/types/api";
 import Link from "next/link";
 
@@ -23,26 +23,34 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800 text-white">
-        <Container className="py-20 lg:py-32">
+      <section className="bg-slate-900 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/40 via-slate-900 to-slate-900"></div>
+        <Container className="py-24 lg:py-32 relative z-10">
           <div className="text-center max-w-4xl mx-auto">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-900/30 border border-emerald-500/30 text-emerald-400 text-sm font-medium mb-8">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              </span>
+              Live Community Updates
+            </div>
+            <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight text-white tracking-tight">
               Building a{" "}
-              <span className="bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
                 Better
               </span>
               <br />
               Neighbourhood Together
             </h1>
-            <p className="text-xl md:text-2xl mb-8 text-blue-100 leading-relaxed">
+            <p className="text-xl md:text-2xl mb-10 text-slate-300 leading-relaxed max-w-2xl mx-auto">
               Report issues, track progress, and see real change happen in your
-              community. Every voice matters in creating the neighborhood we all
-              deserve.
+              community. Every voice matters.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-20">
               <Link
                 href="/reports/add"
-                className="bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold hover:bg-blue-50 transition-all duration-300 transform hover:scale-105 shadow-lg inline-flex items-center justify-center gap-2"
+                className="bg-emerald-600 text-white px-8 py-4 rounded-xl font-semibold hover:bg-emerald-500 transition-all duration-300 shadow-lg shadow-emerald-900/20 inline-flex items-center justify-center gap-2"
               >
                 <svg
                   className="w-5 h-5"
@@ -61,7 +69,7 @@ export default function Home() {
               </Link>
               <Link
                 href="/reports"
-                className="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-blue-600 transition-all duration-300 transform hover:scale-105 inline-flex items-center justify-center gap-2"
+                className="bg-slate-800 text-white border border-slate-700 px-8 py-4 rounded-xl font-semibold hover:bg-slate-700 transition-all duration-300 inline-flex items-center justify-center gap-2"
               >
                 <svg
                   className="w-5 h-5"
@@ -81,31 +89,41 @@ export default function Home() {
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 border-t border-slate-800 pt-12">
               <div className="text-center">
-                <div className="text-3xl md:text-4xl font-bold mb-2">
+                <div className="text-3xl md:text-4xl font-bold mb-2 text-white">
                   {reports.length}
                 </div>
-                <div className="text-blue-200">Total Reports</div>
+                <div className="text-slate-400 text-sm font-medium uppercase tracking-wider">
+                  Total Reports
+                </div>
               </div>
               <div className="text-center">
-                <div className="text-3xl md:text-4xl font-bold mb-2">
+                <div className="text-3xl md:text-4xl font-bold mb-2 text-white">
                   {
                     reports.filter((r) => r.status === ReportStatus.PENDING)
                       .length
                   }
                 </div>
-                <div className="text-blue-200">Issues Resolved</div>
+                <div className="text-slate-400 text-sm font-medium uppercase tracking-wider">
+                  Active Issues
+                </div>
               </div>
               <div className="text-center">
-                <div className="text-3xl md:text-4xl font-bold mb-2">
+                <div className="text-3xl md:text-4xl font-bold mb-2 text-white">
                   {reports.reduce((sum, r) => sum + r.upvotes, 0)}
                 </div>
-                <div className="text-blue-200">Community Upvotes</div>
+                <div className="text-slate-400 text-sm font-medium uppercase tracking-wider">
+                  Upvotes
+                </div>
               </div>
               <div className="text-center">
-                <div className="text-3xl md:text-4xl font-bold mb-2">100%</div>
-                <div className="text-blue-200">Community Driven</div>
+                <div className="text-3xl md:text-4xl font-bold mb-2 text-white">
+                  100%
+                </div>
+                <div className="text-slate-400 text-sm font-medium uppercase tracking-wider">
+                  Community Driven
+                </div>
               </div>
             </div>
           </div>
@@ -113,22 +131,22 @@ export default function Home() {
       </section>
 
       {/* How It Works */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-24 bg-white">
         <Container>
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
               How It Works
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="text-xl text-slate-600 max-w-2xl mx-auto">
               Simple steps to make a difference in your community
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <div className="text-center group">
+              <div className="w-20 h-20 bg-emerald-50 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-emerald-100 transition-colors">
                 <svg
-                  className="w-8 h-8 text-blue-600"
+                  className="w-10 h-10 text-emerald-600"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -141,19 +159,19 @@ export default function Home() {
                   />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+              <h3 className="text-xl font-bold text-slate-900 mb-3">
                 1. Report
               </h3>
-              <p className="text-gray-600 leading-relaxed">
+              <p className="text-slate-600 leading-relaxed">
                 Spot an issue? Take a photo, add details, and pin the location.
                 Your report helps identify problems that need attention.
               </p>
             </div>
 
-            <div className="text-center">
-              <div className="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <div className="text-center group">
+              <div className="w-20 h-20 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-blue-100 transition-colors">
                 <svg
-                  className="w-8 h-8 text-purple-600"
+                  className="w-10 h-10 text-blue-600"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -166,19 +184,19 @@ export default function Home() {
                   />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+              <h3 className="text-xl font-bold text-slate-900 mb-3">
                 2. Engage
               </h3>
-              <p className="text-gray-600 leading-relaxed">
-                Community members upvote important issues, share experiences,
+              <p className="text-slate-600 leading-relaxed">
+                Community members upvote important reports, share experiences,
                 and track progress together as a unified voice.
               </p>
             </div>
 
-            <div className="text-center">
-              <div className="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <div className="text-center group">
+              <div className="w-20 h-20 bg-amber-50 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-amber-100 transition-colors">
                 <svg
-                  className="w-8 h-8 text-green-600"
+                  className="w-10 h-10 text-amber-600"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -191,10 +209,10 @@ export default function Home() {
                   />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+              <h3 className="text-xl font-bold text-slate-900 mb-3">
                 3. Resolve
               </h3>
-              <p className="text-gray-600 leading-relaxed">
+              <p className="text-slate-600 leading-relaxed">
                 Local authorities and community leaders take action based on
                 reports, creating visible improvements in your neighborhood.
               </p>
@@ -204,20 +222,20 @@ export default function Home() {
       </section>
 
       {/* Recent Reports */}
-      <section className="py-20">
+      <section className="py-24 bg-slate-50">
         <Container>
           <div className="flex items-center justify-between mb-12">
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
                 Recent Reports
               </h2>
-              <p className="text-xl text-gray-600">
+              <p className="text-xl text-slate-600">
                 See what your neighbors are reporting
               </p>
             </div>
             <Link
               href="/reports"
-              className="hidden sm:flex bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium items-center gap-2"
+              className="hidden sm:flex bg-white text-emerald-600 border border-emerald-200 px-6 py-3 rounded-lg hover:bg-emerald-50 transition-colors font-medium items-center gap-2"
             >
               View All Reports
               <svg
@@ -236,7 +254,7 @@ export default function Home() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
             {recentReports.map((report) => (
               <ReportCard key={report.id} report={report} />
             ))}
@@ -245,7 +263,7 @@ export default function Home() {
           <div className="text-center sm:hidden">
             <Link
               href="/reports"
-              className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium inline-flex items-center gap-2"
+              className="bg-white text-emerald-600 border border-emerald-200 px-6 py-3 rounded-lg hover:bg-emerald-50 transition-colors font-medium inline-flex items-center gap-2"
             >
               View All Reports
               <svg
@@ -267,13 +285,14 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
-        <Container>
+      <section className="py-24 bg-emerald-900 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-10"></div>
+        <Container className="relative z-10">
           <div className="text-center max-w-3xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">
               Ready to Make a Difference?
             </h2>
-            <p className="text-xl mb-8 text-blue-100">
+            <p className="text-xl mb-10 text-emerald-100 leading-relaxed">
               Join thousands of neighbors working together to improve our
               community. Your voice matters, and together we can create lasting
               change.
@@ -281,7 +300,7 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/reports/add"
-                className="bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold hover:bg-blue-50 transition-all duration-300 transform hover:scale-105 shadow-lg inline-flex items-center justify-center gap-2"
+                className="bg-white text-emerald-900 px-8 py-4 rounded-xl font-bold hover:bg-emerald-50 transition-all duration-300 shadow-lg inline-flex items-center justify-center gap-2"
               >
                 <svg
                   className="w-5 h-5"
@@ -300,7 +319,7 @@ export default function Home() {
               </Link>
               <Link
                 href="/auth/sign"
-                className="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-blue-600 transition-all duration-300 transform hover:scale-105 inline-flex items-center justify-center gap-2"
+                className="border-2 border-emerald-700 text-white px-8 py-4 rounded-xl font-bold hover:bg-emerald-800 transition-all duration-300 inline-flex items-center justify-center gap-2"
               >
                 <svg
                   className="w-5 h-5"

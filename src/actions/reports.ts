@@ -7,13 +7,19 @@ import {
   ReportDetailResponse,
   CreateReportApiResponse,
   ResolveReportResponse,
+  Report as ApiReport,
   Report,
+  ReportActivitiesResponse,
+  ReportActivity,
+  AddCommentRequest,
+  AddCommentApiResponse,
+  UpvoteReportApiResponse,
 } from "@/types/api";
 import { api } from "@/lib/api";
 
 export const getReports = async (): Promise<Report[]> => {
   try {
-    const response = await api.get("/issues/");
+    const response = await api.get("/reports");
     return (response.data as ReportsListResponse).data || [];
   } catch (error) {
     console.error("Get reports error:", error);
@@ -23,7 +29,7 @@ export const getReports = async (): Promise<Report[]> => {
 
 export const getReportById = async (id: string): Promise<Report | null> => {
   try {
-    const response = await api.get(`/issues/${id}`);
+    const response = await api.get(`/reports/${id}`);
     return (response.data as ReportDetailResponse).data || null;
   } catch (error) {
     console.error("Get report by ID error:", error);
@@ -31,9 +37,21 @@ export const getReportById = async (id: string): Promise<Report | null> => {
   }
 };
 
+export const getReportActivities = async (
+  id: string
+): Promise<ReportActivity[]> => {
+  try {
+    const response = await api.get(`/reports/${id}/activities`);
+    return (response.data as ReportActivitiesResponse).data || [];
+  } catch (error) {
+    console.error("Get report activities error:", error);
+    throw error;
+  }
+};
+
 export const getUserReports = async (): Promise<Report[]> => {
   try {
-    const response = await api.get("/issues/user");
+    const response = await api.get("/reports/user");
     return (response.data as ReportsListResponse).data || [];
   } catch (error) {
     console.error("Get user reports error:", error);
@@ -43,7 +61,7 @@ export const getUserReports = async (): Promise<Report[]> => {
 
 export const getUnresolvedReports = async (): Promise<Report[]> => {
   try {
-    const response = await api.get("/issues/unresolved");
+    const response = await api.get("/reports/unresolved");
     return (response.data as ReportsListResponse).data || [];
   } catch (error) {
     console.error("Get unresolved reports error:", error);
@@ -53,7 +71,7 @@ export const getUnresolvedReports = async (): Promise<Report[]> => {
 
 export const getUserResolvedReports = async (): Promise<Report[]> => {
   try {
-    const response = await api.get("/issues/user/resolved");
+    const response = await api.get("/reports/user/resolved");
     return (response.data as ReportsListResponse).data || [];
   } catch (error) {
     console.error("Get user resolved reports error:", error);
@@ -63,7 +81,7 @@ export const getUserResolvedReports = async (): Promise<Report[]> => {
 
 export const getUserUnresolvedReports = async (): Promise<Report[]> => {
   try {
-    const response = await api.get("/issues/user/unresolved");
+    const response = await api.get("/reports/user/unresolved");
     return (response.data as ReportsListResponse).data || [];
   } catch (error) {
     console.error("Get user unresolved reports error:", error);
@@ -78,25 +96,37 @@ export const addReport = async (data: CreateReportType): Promise<Report> => {
       description: data.description,
       image: data.image,
       location: data.location,
+      category: "OTHER", // Default category hardcoded for now until schema is updated
     };
 
-    const response = await api.post("/issues/", requestData, {
+    const response = await api.post("/reports/", requestData, {
       withCredentials: true,
     });
     const apiResponse = response.data as CreateReportApiResponse;
+    const reportData = apiResponse.data!.report;
 
     // Convert API response to our Report type
+    // The API now returns a complete report object structure that matches our interface close enough
+    // We just need to map it correctly.
     const newReport: Report = {
-      id: apiResponse.data!.id,
-      title: apiResponse.data!.title,
-      description: apiResponse.data!.description,
-      imageUrl: apiResponse.data!.imageUrl,
-      latitude: apiResponse.data!.latitude,
-      longitude: apiResponse.data!.longitude,
+      id: reportData.id,
+      title: reportData.title,
+      description: reportData.description,
+      imageUrl: reportData.imageUrl,
+      latitude: reportData.latitude,
+      longitude: reportData.longitude,
+      category: reportData.category,
       upvotes: 0,
-      status: apiResponse.data!.status,
-      createdAt: apiResponse.data!.createdAt,
-      creatorId: apiResponse.data!.creatorId,
+      status: reportData.status,
+      duplicateCount: 0,
+      createdAt: reportData.createdAt,
+      creatorId: reportData.creatorId,
+      creator: {
+        // Mock creator for immediate UI update if needed, or fetch fresh
+        id: reportData.creatorId,
+        fullName: "You", // This should ideally come from auth context or response
+        role: "USER" as any,
+      },
     };
 
     return newReport;
@@ -108,7 +138,7 @@ export const addReport = async (data: CreateReportType): Promise<Report> => {
 
 export const resolveReport = async (id: string): Promise<Report> => {
   try {
-    const response = await api.patch(`/issues/${id}/resolve`, {});
+    const response = await api.patch(`/reports/${id}/resolve`, {});
     return (response.data as ResolveReportResponse).data!;
   } catch (error) {
     console.error("Resolve report error:", error);
@@ -116,14 +146,32 @@ export const resolveReport = async (id: string): Promise<Report> => {
   }
 };
 
-// Legacy function for compatibility - will be deprecated
-export const upvoteReport = async (id: string): Promise<Report | null> => {
-  // This functionality doesn't exist in the backend API yet
-  // Return the report without upvoting for now
+export const upvoteReport = async (id: string): Promise<void> => {
   try {
-    return await getReportById(id);
+    await api.post(`/reports/${id}/upvote`);
   } catch (error) {
     console.error("Upvote report error:", error);
-    return null;
+    throw error;
+  }
+};
+
+export const addComment = async (
+  reportId: string,
+  text: string,
+  images: string[] = []
+): Promise<ReportActivity> => {
+  try {
+    const requestData: AddCommentRequest = {
+      text,
+      images,
+    };
+    const response = await api.post(
+      `/reports/${reportId}/comments`,
+      requestData
+    );
+    return (response.data as AddCommentApiResponse).data!;
+  } catch (error) {
+    console.error("Add comment error:", error);
+    throw error;
   }
 };
