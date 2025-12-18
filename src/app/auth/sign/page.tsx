@@ -6,26 +6,25 @@ import Container from "@/components/Container";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/PasswordInput";
-import {
-  Field,
-  FieldGroup,
-  FieldLabel,
-  FieldSet,
-  FieldLegend,
-} from "@/components/ui/field";
+import { Field, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
 import { useSignIn } from "@/hooks/useAuth";
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const SignInPage = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
   const signInMutation = useSignIn();
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       await signInMutation.mutateAsync({ phoneNumber, password });
+      router.push("/reports");
+      toast.success("Signed in successfully!");
     } catch (error) {
       console.error("Sign in failed:", error);
     }
@@ -98,7 +97,11 @@ const SignInPage = () => {
               </Link>
             </div>
 
-            <Button type="submit" disabled={signInMutation.isPending}>
+            <Button
+              className="w-full"
+              type="submit"
+              disabled={signInMutation.isPending}
+            >
               {signInMutation.isPending ? "Signing In..." : "Sign In"}
             </Button>
 
