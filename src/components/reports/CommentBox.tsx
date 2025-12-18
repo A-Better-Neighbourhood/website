@@ -5,6 +5,7 @@
 import React, { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { useAddComment } from "@/hooks/reports/useReportMutations";
+import { Textarea } from "../ui/textarea";
 
 interface CommentBoxProps {
   reportId: string;
@@ -57,7 +58,7 @@ const CommentBox: React.FC<CommentBoxProps> = ({ reportId }) => {
         Add a comment
       </div>
       <form onSubmit={handleSubmit} className="p-4">
-        <textarea
+        <Textarea
           className="w-full min-h-[100px] p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all resize-y text-sm mb-3"
           placeholder="Leave a comment..."
           value={text}

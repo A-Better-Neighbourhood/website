@@ -44,6 +44,7 @@ export enum ReportStatus {
   RESOLVED = "RESOLVED",
   PENDING = "PENDING",
   IN_PROGRESS = "IN_PROGRESS",
+  ARCHIVED = "ARCHIVED",
 }
 
 export enum UserRole {
@@ -73,6 +74,8 @@ export interface Report {
   creator: Creator;
   creatorId?: string; // Kept for backward compat if needed, but creator object is preferred
   upvotes: number; // Kept for UI display
+  originalReportId?: string;
+  hasLiked?: boolean;
 }
 
 // Activity Types

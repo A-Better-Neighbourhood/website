@@ -144,17 +144,17 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ activity }) => {
 
       {/* Comment Body */}
       <div
-        className={`flex-1 rounded-xl border ${
+        className={`flex-1 rounded-xl border-2 ${
           isAuthority
-            ? "border-blue-200 bg-blue-50/30"
+            ? "border-blue-600 bg-blue-50/40"
             : "border-gray-200 bg-white"
-        } overflow-hidden shadow-sm`}
+        } overflow-hidden shadow-sm transition-all`}
       >
         {/* Header */}
         <div
           className={`px-4 py-2 border-b flex items-center justify-between ${
             isAuthority
-              ? "bg-blue-50 border-blue-200"
+              ? "bg-blue-100/50 border-blue-200"
               : "bg-gray-50 border-gray-200"
           }`}
         >
@@ -167,7 +167,7 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ activity }) => {
               {activity.createdBy?.fullName}
             </span>
             {isAuthority && (
-              <span className="px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 text-xs font-medium border border-blue-200">
+              <span className="px-2 py-0.5 rounded-full bg-blue-600 text-white text-xs font-bold shadow-sm">
                 Official
               </span>
             )}
