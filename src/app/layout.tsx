@@ -7,6 +7,7 @@ import ReactQueryProvider from "@/components/ReactQueryProvider";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 
 const figtree = Figtree({ subsets: ["latin"], variable: "--font-sans" });
@@ -16,7 +17,10 @@ const bricolage = Bricolage_Grotesque({
 });
 
 export const metadata: Metadata = {
-  title: "A Better Neighbourhood",
+  title: {
+    default: "A Better Neighbourhood",
+    template: "%s · A Better Neighbourhood",
+  },
   icons: "/SIH2.webp",
   description: "Empowering Communities: Report, Track, and Resolve Together",
 };
@@ -45,6 +49,7 @@ export default function RootLayout({
               <main className="flex-1">{children}</main>
               <SiteFooter />
             </div>
+            <Toaster />
           </ReactQueryProvider>
         </ThemeProvider>
       </body>
