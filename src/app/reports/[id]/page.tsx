@@ -1,7 +1,6 @@
 /** @format */
 
-import { getReportById, getReportActivities } from "@/actions/reports";
-import ReportIssueLayout from "@/components/reports/ReportIssueLayout";
+import { getReportById } from "@/actions/reports";
 import { notFound } from "next/navigation";
 
 interface ReportPageProps {
@@ -9,26 +8,16 @@ interface ReportPageProps {
 }
 
 export default async function ReportPage(props: ReportPageProps) {
-  const params = await props.params;
-  const { id } = params;
-
-  // Parallel data fetching
-  const [report, activities] = await Promise.all([
-    getReportById(id),
-    getReportActivities(id).catch(() => []), // Handle activities error gracefully
-  ]);
+  const { id } = await props.params;
+  const report = await getReportById(id);
 
   if (!report) {
     notFound();
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <ReportIssueLayout
-        reportId={id}
-        initialReport={report}
-        initialActivities={activities}
-      />
-    </div>
+    <main className="mx-auto max-w-5xl px-4 py-16">
+      <h1 className="text-2xl font-semibold">{report.title}</h1>
+    </main>
   );
 }
