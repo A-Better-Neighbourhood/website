@@ -12,21 +12,16 @@ import { ReportCard } from "@/components/report-card";
 import { Button } from "@/components/ui/button";
 import {
   Field,
-  FieldContent,
-  FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
-  FieldTitle,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import type { CreatedReport } from "@/actions/reports";
 import { useCreateReport } from "@/hooks/reports/useReportMutations";
 import { useAuth } from "@/hooks/useAuth";
-import { categoryMeta, REPORT_CATEGORIES } from "@/lib/categories";
 import { getErrorMessage } from "@/lib/errors";
 import { cn } from "@/lib/utils";
 import { CreateReportSchema, type CreateReportType } from "@/schemas/ReportSchema";
@@ -71,7 +66,6 @@ export function AddReportForm() {
     defaultValues: {
       image: "",
       location: [0, 0],
-      category: undefined,
       title: "",
       description: "",
     },
@@ -138,7 +132,7 @@ export function AddReportForm() {
     imageUrl: values.image ? [values.image] : [],
     latitude: values.location?.[0] ?? 0,
     longitude: values.location?.[1] ?? 0,
-    category: values.category ?? "",
+    category: "",
     status: ReportStatus.PENDING,
     duplicateCount: 0,
     createdAt: new Date().toISOString(),
@@ -180,51 +174,9 @@ export function AddReportForm() {
           />
         </Step>
 
-        <Step
-          number={2}
-          title="What kind of issue is it?"
-          description="This sends it to the right people."
-        >
-          <Controller
-            name="category"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field>
-                <RadioGroup
-                  aria-label="Issue category"
-                  value={field.value ?? ""}
-                  onValueChange={field.onChange}
-                  className="grid-cols-1 sm:grid-cols-2 xl:grid-cols-3"
-                >
-                  {REPORT_CATEGORIES.map((category) => {
-                    const meta = categoryMeta[category];
-                    const id = `category-${category}`;
-                    return (
-                      <FieldLabel key={category} htmlFor={id}>
-                        <Field orientation="horizontal">
-                          <meta.icon className="mt-0.5 size-5 shrink-0 text-primary" />
-                          <FieldContent>
-                            <FieldTitle>{meta.label}</FieldTitle>
-                            <FieldDescription>{meta.hint}</FieldDescription>
-                          </FieldContent>
-                          <RadioGroupItem
-                            value={category}
-                            id={id}
-                            aria-invalid={fieldState.invalid}
-                          />
-                        </Field>
-                      </FieldLabel>
-                    );
-                  })}
-                </RadioGroup>
-                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-              </Field>
-            )}
-          />
-        </Step>
 
         <Step
-          number={3}
+          number={2}
           title="Describe it"
           description="A short title and a few details: where exactly, how bad, since when."
         >

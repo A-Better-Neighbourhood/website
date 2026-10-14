@@ -14,7 +14,7 @@ export default function AddReportPage() {
           What did you spot?
         </h1>
         <p className="text-lg text-muted-foreground">
-          Three quick steps. Your neighbours can back it and the authorities
+          Two quick steps. Your neighbours can back it and the authorities
           will see it right away.
         </p>
       </div>

@@ -81,7 +81,7 @@ export function ReportsBrowser() {
         (r) =>
           !needle ||
           [r.title, r.description, r.category]
-            .filter(Boolean)
+            .filter((text): text is string => Boolean(text))
             .some((text) => text.toLowerCase().includes(needle)),
       )
       .sort(sorts[sort].compare);

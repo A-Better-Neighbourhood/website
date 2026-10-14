@@ -13,14 +13,8 @@ export async function signUpUser(
   userData: SignUpRequest
 ): Promise<AuthApiResponse> {
   try {
+    // The API sets an httpOnly session cookie, so there's no token to store here.
     const response = await api.post("/auth/signup", userData);
-
-    // Store token if provided
-    const authData = response.data as any;
-    if (authData?.token && typeof window !== "undefined") {
-      localStorage.setItem("auth_token", authData.token);
-    }
-
     return response.data as AuthApiResponse;
   } catch (error) {
     console.error("Sign up error:", error);
@@ -33,7 +27,6 @@ export async function signInUser(
 ): Promise<AuthApiResponse> {
   try {
     const response = await api.post("/auth/signin", credentials);
-    console.log(response);
 
     // Token is set as HTTP-only cookie automatically by backend
     return response.data as AuthApiResponse;

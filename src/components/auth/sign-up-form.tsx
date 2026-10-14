@@ -109,7 +109,7 @@ export function SignUpForm() {
                 autoComplete="new-password"
                 aria-invalid={fieldState.invalid}
               />
-              <FieldDescription>At least 8 characters.</FieldDescription>
+              <FieldDescription>At least 6 characters.</FieldDescription>
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
           )}

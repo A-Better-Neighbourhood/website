@@ -1,14 +1,12 @@
 /** @format */
 
 import z from "zod";
-import { REPORT_CATEGORIES } from "@/lib/categories";
 
 export const CreateReportSchema = z.object({
   image: z.string().min(1, "Take a photo of the issue"),
   location: z
     .tuple([z.number(), z.number()])
     .refine(([lat, lng]) => lat !== 0 || lng !== 0, "We need your location to pin the report"),
-  category: z.enum(REPORT_CATEGORIES, "Pick what kind of issue it is"),
   title: z
     .string()
     .trim()

@@ -2,33 +2,19 @@
 
 "use client";
 
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   ArrowUp,
   Check,
-  CircleCheck,
   ExternalLink,
   Loader2,
 } from "lucide-react";
 import { toast } from "sonner";
 import { LocationMap } from "@/components/location-map";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import {
-  useResolveReport,
-  useUpvoteReport,
-} from "@/hooks/reports/useReportMutations";
+import { useUpvoteReport } from "@/hooks/reports/useReportMutations";
 import { categoryLabel } from "@/lib/categories";
 import { getErrorMessage } from "@/lib/errors";
 import { fullDate, statusMeta } from "@/lib/format";
@@ -158,10 +144,9 @@ export function ReportSidebar({
   const showBottom = part !== "top";
   const router = useRouter();
   const upvote = useUpvoteReport();
-  const resolve = useResolveReport();
-  const isOwner =
-    !!user && user.id === (report.creator?.id ?? report.creatorId);
-  const isResolved = report.status === ReportStatus.RESOLVED;
+  // The API doesn't say whether the viewer has upvoted, so remember it for this visit.
+  const [upvoted, setUpvoted] = useState(false);
+  const liked = report.hasLiked || upvoted;
   const mapsUrl = `https://www.openstreetmap.org/?mlat=${report.latitude}&mlon=${report.longitude}#map=18/${report.latitude}/${report.longitude}`;
 
   async function handleUpvote() {
@@ -171,17 +156,15 @@ export function ReportSidebar({
     }
     try {
       await upvote.mutateAsync(report.id);
+      setUpvoted(true);
     } catch (error) {
-      toast.error(getErrorMessage(error));
-    }
-  }
-
-  async function handleResolve() {
-    try {
-      await resolve.mutateAsync(report.id);
-      toast.success("Marked as fixed. Thanks for closing the loop!");
-    } catch (error) {
-      toast.error(getErrorMessage(error));
+      const message = getErrorMessage(error);
+      if (/already upvoted/i.test(message)) {
+        setUpvoted(true);
+        toast.info("You've already upvoted this one.");
+      } else {
+        toast.error(message);
+      }
     }
   }
 
@@ -192,18 +175,18 @@ export function ReportSidebar({
           <div className="flex flex-col gap-2">
             <Button
               size="lg"
-              variant={report.hasLiked ? "secondary" : "default"}
-              disabled={report.hasLiked || upvote.isPending}
+              variant={liked ? "secondary" : "default"}
+              disabled={liked || upvote.isPending}
               onClick={handleUpvote}
             >
               {upvote.isPending ? (
                 <Loader2 data-icon="inline-start" className="animate-spin" />
-              ) : report.hasLiked ? (
+              ) : liked ? (
                 <Check data-icon="inline-start" />
               ) : (
                 <ArrowUp data-icon="inline-start" />
               )}
-              {report.hasLiked ? "Upvoted" : "Upvote"}
+              {liked ? "Upvoted" : "Upvote"}
               <span className="tabular-nums opacity-80">{report.upvotes}</span>
             </Button>
             <p className="text-center text-sm text-muted-foreground">
@@ -265,35 +248,6 @@ export function ReportSidebar({
               )}
             </dl>
           </Section>
-
-          {isOwner && !isResolved && (
-            <>
-              <Separator />
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button variant="outline">
-                    <CircleCheck data-icon="inline-start" />
-                    Mark as fixed
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Is this sorted?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Marking it as fixed lets your neighbours know the issue is
-                      resolved. It will show up on the timeline.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Not yet</AlertDialogCancel>
-                    <AlertDialogAction onClick={handleResolve}>
-                      Yes, it&apos;s fixed
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-            </>
-          )}
         </>
       )}
     </aside>

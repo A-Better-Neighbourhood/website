@@ -1,7 +1,7 @@
 /** @format */
 
-import Image from "next/image";
 import { assetUrl } from "@/lib/api";
+import { ReportImage } from "@/components/report-image";
 import { cn } from "@/lib/utils";
 
 /**
@@ -43,7 +43,7 @@ export function PhotoGrid({
             images.length === 3 && index === 0 && "col-span-2 aspect-[16/9]",
           )}
         >
-          <Image
+          <ReportImage
             src={assetUrl(src)}
             alt={`${alt}, photo ${index + 1}`}
             fill

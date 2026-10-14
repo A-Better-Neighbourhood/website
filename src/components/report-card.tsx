@@ -1,10 +1,10 @@
 /** @format */
 
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowUp, ImageOff } from "lucide-react";
 import { categoryLabel } from "@/lib/categories";
 import { statusMeta, timeAgo } from "@/lib/format";
+import { ReportImage } from "@/components/report-image";
 import { cn } from "@/lib/utils";
 import type { Report, ReportStatus } from "@/types/api";
 
@@ -63,7 +63,7 @@ export function ReportCard({
         )}
       >
         {image ? (
-          <Image
+          <ReportImage
             src={image}
             alt=""
             fill

@@ -2,7 +2,7 @@
 
 /**
  * Temporary in-memory data so the UI can be explored without the backend.
- * On by default in development only; set NEXT_PUBLIC_USE_MOCKS=false to hit the real API.
+ * Opt in with NEXT_PUBLIC_USE_MOCKS=true (development only); the real API is used otherwise.
  * Mutations (upvote, comment, resolve, create) update this store until the page reloads.
  */
 
@@ -19,7 +19,7 @@ import {
 
 export const USE_MOCKS =
   process.env.NODE_ENV === "development" &&
-  process.env.NEXT_PUBLIC_USE_MOCKS !== "false";
+  process.env.NEXT_PUBLIC_USE_MOCKS === "true";
 
 const HOUR = 3600 * 1000;
 const ago = (hours: number) => new Date(Date.now() - hours * HOUR).toISOString();
@@ -287,7 +287,6 @@ export const mockApi = {
     description: string;
     image: string;
     location: [number, number];
-    category: string;
   }) {
     await delay(600);
     const created = report({
@@ -297,7 +296,7 @@ export const mockApi = {
       imageUrl: input.image ? [input.image] : [],
       latitude: input.location[0],
       longitude: input.location[1],
-      category: input.category,
+      category: "OTHER",
       status: ReportStatus.PENDING,
       createdAt: new Date().toISOString(),
       creator: you,

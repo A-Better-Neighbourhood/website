@@ -111,7 +111,8 @@ export const addReport = async (
       description: data.description,
       image: data.image,
       location: data.location,
-      category: data.category,
+      // Required by the API, but the server replaces it with the category its image model predicts.
+      category: "OTHER",
     };
 
     const response = await api.post("/reports/", requestData, {

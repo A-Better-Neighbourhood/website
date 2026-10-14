@@ -15,7 +15,7 @@ export const SignUpSchema = z.object({
   name: z.string().trim().min(2, "Tell us your name"),
   phoneNumber,
   address: z.string().trim().min(5, "Add your address so we know your neighbourhood"),
-  password: z.string().min(8, "Use at least 8 characters"),
+  password: z.string().min(6, "Use at least 6 characters"),
 });
 
 export type SignInType = z.infer<typeof SignInSchema>;

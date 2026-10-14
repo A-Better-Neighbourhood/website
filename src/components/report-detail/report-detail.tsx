@@ -3,7 +3,15 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronRight, FileQuestion, Lock, RotateCcw, WifiOff } from "lucide-react";
+import {
+  ArrowRight,
+  ChevronRight,
+  Copy,
+  FileQuestion,
+  Lock,
+  RotateCcw,
+  WifiOff,
+} from "lucide-react";
 import { StatusLabel } from "@/components/report-card";
 import { CommentComposer } from "@/components/report-detail/comment-composer";
 import { ReportSidebar } from "@/components/report-detail/report-sidebar";
@@ -106,6 +114,25 @@ export function ReportDetail({ id }: { id: string }) {
         </div>
       </header>
 
+      {data.isDuplicate && data.originalReportId && (
+        <div className="flex flex-col gap-3 rounded-2xl border bg-sky/50 p-5 sm:flex-row sm:items-center sm:justify-between">
+          <p className="flex items-start gap-3 text-sm">
+            <Copy className="mt-0.5 size-4 shrink-0 text-sky-foreground" />
+            <span>
+              <span className="font-semibold">This was merged into an earlier report.</span>{" "}
+              Someone had already reported the same issue nearby, so updates,
+              comments and upvotes happen there.
+            </span>
+          </p>
+          <Button variant="outline" asChild>
+            <Link href={`/reports/${data.originalReportId}`}>
+              Go to the original
+              <ArrowRight data-icon="inline-end" />
+            </Link>
+          </Button>
+        </div>
+      )}
+
       <div className="grid gap-10 lg:grid-cols-[1fr_18rem]">
         <div className="flex min-w-0 flex-col gap-6">
           <ReportSidebar report={data} user={user} part="top" className="mb-2 lg:hidden" />
@@ -141,9 +168,11 @@ export function ReportDetail({ id }: { id: string }) {
             </p>
           )}
 
-          <div className="border-t pt-6">
-            <CommentComposer reportId={data.id} user={user} />
-          </div>
+          {!data.isDuplicate && (
+            <div className="border-t pt-6">
+              <CommentComposer reportId={data.id} user={user} />
+            </div>
+          )}
 
           <ReportSidebar
             report={data}

@@ -38,12 +38,8 @@ export function useSignUp() {
 
   return useMutation({
     mutationFn: (userData: SignUpRequest) => signUpUser(userData),
-    onSuccess: (data) => {
-      // Set user data in cache after successful signup
-      if (data.data) {
-        queryClient.setQueryData(authKeys.profile(), data.data);
-      }
-    },
+    // Sign-up responds with { token, user }, not a profile, so refetch the profile.
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: authKeys.profile() }),
   });
 }
 
@@ -52,14 +48,7 @@ export function useSignIn() {
 
   return useMutation({
     mutationFn: (credentials: SignInRequest) => signInUser(credentials),
-    onSuccess: (data) => {
-      // Set user data in cache after successful signin
-      if (data.data) {
-        queryClient.setQueryData(authKeys.profile(), data.data);
-      }
-      // Invalidate and refetch profile to get complete user data
-      queryClient.invalidateQueries({ queryKey: authKeys.profile() });
-    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: authKeys.profile() }),
   });
 }
 
