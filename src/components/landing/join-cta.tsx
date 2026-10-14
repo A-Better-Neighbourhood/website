@@ -52,7 +52,7 @@ export function JoinCta() {
               key={path.href}
               href={path.href}
               className={cn(
-                "group relative flex min-h-72 flex-col gap-4 overflow-hidden rounded-[2rem] p-8 transition-transform hover:-translate-y-1 md:p-10",
+                "group relative flex min-h-72 flex-col gap-4 overflow-hidden rounded-[2rem] p-8 md:p-10",
                 path.className,
               )}
             >
@@ -69,7 +69,7 @@ export function JoinCta() {
               </h3>
               <p className="max-w-md opacity-85">{path.description}</p>
               <span className="inline-flex items-center gap-2 font-semibold">
-                {path.action}
+                <span className="underline-grow">{path.action}</span>
                 <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
               </span>
             </Link>

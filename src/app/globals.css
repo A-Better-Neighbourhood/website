@@ -150,3 +150,28 @@
     @apply font-heading tracking-tight;
   }
 }
+
+@layer components {
+  .underline-grow {
+    background-image: linear-gradient(
+      var(--underline-color, currentColor),
+      var(--underline-color, currentColor)
+    );
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    background-size: 0% 0.09em;
+    box-decoration-break: clone;
+    transition: background-size 350ms cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  .group:hover .underline-grow,
+  .group:focus-visible .underline-grow {
+    background-size: 100% 0.09em;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .underline-grow {
+      transition: none;
+    }
+  }
+}

@@ -49,7 +49,7 @@ export function ReportCard({
     <Link
       href={`/reports/${report.id}`}
       className={cn(
-        "group flex overflow-hidden rounded-3xl border bg-card transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/5",
+        "group flex overflow-hidden rounded-3xl border bg-card outline-none transition-colors hover:border-primary/40 focus-visible:border-primary/60",
         compact ? "flex-row" : "flex-col",
         className,
       )}
@@ -73,7 +73,7 @@ export function ReportCard({
                   ? "160px"
                   : "(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
             }
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            className="object-cover"
           />
         ) : (
           <div className="flex h-full min-h-24 items-center justify-center text-muted-foreground">
@@ -105,7 +105,9 @@ export function ReportCard({
             featured ? "text-2xl lg:text-3xl" : compact ? "text-base" : "text-lg",
           )}
         >
-          {report.title}
+          <span className="underline-grow [--underline-color:var(--color-primary)]">
+            {report.title}
+          </span>
         </h3>
         <p
           className={cn(
