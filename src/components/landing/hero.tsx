@@ -18,7 +18,7 @@ export function Hero() {
 
       <div className="relative mx-auto grid max-w-6xl items-center gap-14 px-4 py-16 md:py-24 lg:grid-cols-[1.1fr_1fr]">
         <div className="flex flex-col items-start gap-6">
-          <span className="inline-flex items-center gap-2 rounded-full border bg-card px-3 py-1 text-sm font-medium shadow-xs">
+          <span className="inline-flex items-center gap-2 text-sm font-semibold text-primary">
             <Sparkles className="size-4 text-primary" />
             Your neighbourhood, in your hands
           </span>
@@ -28,20 +28,20 @@ export function Hero() {
             <span className="relative inline-block whitespace-nowrap">
               <span
                 aria-hidden
-                className="absolute inset-x-[-0.15em] bottom-[0.08em] h-[0.45em] -rotate-1 rounded-full bg-sun"
+                className="absolute inset-x-[-0.15em] bottom-[0.08em] h-[0.45em] -rotate-1 rounded-sm bg-sun"
               />
               <span className="relative">See it fixed.</span>
             </span>
           </h1>
 
           <p className="max-w-xl text-lg text-muted-foreground md:text-xl">
-            Potholes, broken streetlights, overflowing bins — flag what you see
-            on your street, rally your neighbours behind it, and follow along
+            Potholes, broken streetlights, overflowing bins. Flag what you see on
+            your street, rally your neighbours behind it, and follow along
             until it&apos;s sorted.
           </p>
 
           <div className="flex flex-col gap-3 sm:flex-row">
-            <Button className="h-12 rounded-full px-6 text-base" asChild>
+            <Button className="h-12 rounded-lg px-6 text-base" asChild>
               <Link href="/reports/add">
                 <Plus data-icon="inline-start" />
                 Report an issue
@@ -49,7 +49,7 @@ export function Hero() {
             </Button>
             <Button
               variant="outline"
-              className="h-12 rounded-full bg-card px-6 text-base"
+              className="h-12 rounded-lg bg-card px-6 text-base"
               asChild
             >
               <Link href="/reports">

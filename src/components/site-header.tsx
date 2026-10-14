@@ -42,7 +42,7 @@ export function SiteHeader() {
 
         <nav className="hidden items-center gap-1 md:flex">
           {navigation.map((item) => (
-            <Button key={item.href} variant="ghost" className="rounded-full" asChild>
+            <Button key={item.href} variant="ghost" className="rounded-lg" asChild>
               <Link href={item.href}>{item.name}</Link>
             </Button>
           ))}
@@ -57,11 +57,11 @@ export function SiteHeader() {
               </AvatarFallback>
             </Avatar>
           ) : (
-            <Button variant="ghost" className="hidden rounded-full md:inline-flex" asChild>
+            <Button variant="ghost" className="hidden rounded-lg md:inline-flex" asChild>
               <Link href="/auth/sign">Sign in</Link>
             </Button>
           )}
-          <Button className="hidden h-9 rounded-full px-4 sm:inline-flex" asChild>
+          <Button className="hidden h-9 rounded-lg px-4 sm:inline-flex" asChild>
             <Link href="/reports/add">
               <Plus data-icon="inline-start" />
               Report an issue
@@ -73,7 +73,7 @@ export function SiteHeader() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="rounded-full md:hidden"
+                className="rounded-lg md:hidden"
                 aria-label="Open menu"
               >
                 <Menu />
@@ -97,7 +97,7 @@ export function SiteHeader() {
               </nav>
               <div className="mt-auto flex flex-col gap-2 p-4">
                 <SheetClose asChild>
-                  <Button className="h-11 rounded-full" asChild>
+                  <Button className="h-11 rounded-lg" asChild>
                     <Link href="/reports/add">
                       <Plus data-icon="inline-start" />
                       Report an issue
@@ -106,7 +106,7 @@ export function SiteHeader() {
                 </SheetClose>
                 {!user && (
                   <SheetClose asChild>
-                    <Button variant="outline" className="h-11 rounded-full" asChild>
+                    <Button variant="outline" className="h-11 rounded-lg" asChild>
                       <Link href="/auth/sign">Sign in</Link>
                     </Button>
                   </SheetClose>

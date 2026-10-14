@@ -1,45 +1,79 @@
 /** @format */
 
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { ArrowRight, Camera, HandHeart, type LucideIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+const paths: {
+  title: string;
+  description: string;
+  action: string;
+  href: string;
+  icon: LucideIcon;
+  className: string;
+  iconClassName: string;
+}[] = [
+  {
+    title: "Seen something on your street?",
+    description:
+      "A broken light, a blocked drain, a pothole you keep swerving around. Put it on the map.",
+    action: "Report an issue",
+    href: "/reports/add",
+    icon: Camera,
+    className: "bg-primary text-primary-foreground",
+    iconClassName: "bg-primary-foreground/15 -rotate-6",
+  },
+  {
+    title: "New around here?",
+    description:
+      "Join your neighbours, back the issues you care about, and follow them until they're sorted.",
+    action: "Join your neighbours",
+    href: "/auth/signup",
+    icon: HandHeart,
+    className: "bg-sage text-sage-foreground",
+    iconClassName: "bg-card/60 rotate-3",
+  },
+];
 
 export function JoinCta() {
   return (
     <section className="py-20 md:py-28">
       <div className="mx-auto max-w-6xl px-4">
-        <div className="relative overflow-hidden rounded-[2.5rem] bg-primary px-6 py-16 text-center text-primary-foreground md:px-16 md:py-20">
-          <div
-            aria-hidden
-            className="absolute -top-16 -left-16 size-56 rounded-full bg-primary-foreground/10"
-          />
-          <div
-            aria-hidden
-            className="absolute -right-10 -bottom-20 size-72 rounded-full bg-primary-foreground/10"
-          />
-          <div className="relative mx-auto flex max-w-2xl flex-col items-center gap-6">
-            <h2 className="text-4xl font-bold md:text-5xl">
-              Your street is better with you on it.
-            </h2>
-            <p className="text-lg text-primary-foreground/85">
-              Join your neighbours, back the issues you care about, and help
-              make where you live a little better every week.
-            </p>
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <Button
-                className="h-12 rounded-full bg-background px-6 text-base text-foreground hover:bg-background/90"
-                asChild
+        <div className="mb-10 max-w-2xl">
+          <p className="mb-4 text-sm font-semibold text-primary">Get involved</p>
+          <h2 className="text-4xl font-bold md:text-5xl">
+            Your street is better with you on it.
+          </h2>
+        </div>
+
+        <div className="grid gap-5 md:grid-cols-2">
+          {paths.map((path) => (
+            <Link
+              key={path.href}
+              href={path.href}
+              className={cn(
+                "group relative flex min-h-72 flex-col gap-4 overflow-hidden rounded-[2rem] p-8 transition-transform hover:-translate-y-1 md:p-10",
+                path.className,
+              )}
+            >
+              <span
+                className={cn(
+                  "flex size-14 items-center justify-center rounded-2xl",
+                  path.iconClassName,
+                )}
               >
-                <Link href="/auth/signup">Join your neighbours</Link>
-              </Button>
-              <Button
-                variant="ghost"
-                className="h-12 rounded-full px-6 text-base text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"
-                asChild
-              >
-                <Link href="/reports/add">Report an issue</Link>
-              </Button>
-            </div>
-          </div>
+                <path.icon className="size-7" />
+              </span>
+              <h3 className="mt-auto text-2xl font-semibold md:text-3xl">
+                {path.title}
+              </h3>
+              <p className="max-w-md opacity-85">{path.description}</p>
+              <span className="inline-flex items-center gap-2 font-semibold">
+                {path.action}
+                <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+              </span>
+            </Link>
+          ))}
         </div>
       </div>
     </section>

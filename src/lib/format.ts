@@ -25,22 +25,22 @@ export function timeAgo(date: string) {
 
 export const statusMeta: Record<
   ReportStatus,
-  { label: string; className: string }
+  { label: string; marker: string }
 > = {
   [ReportStatus.PENDING]: {
     label: "Open",
-    className: "bg-sun text-sun-foreground",
+    marker: "bg-chart-3",
   },
   [ReportStatus.IN_PROGRESS]: {
     label: "In progress",
-    className: "bg-sky text-sky-foreground",
+    marker: "bg-chart-4",
   },
   [ReportStatus.RESOLVED]: {
     label: "Fixed",
-    className: "bg-sage text-sage-foreground",
+    marker: "bg-chart-2",
   },
   [ReportStatus.ARCHIVED]: {
     label: "Archived",
-    className: "bg-muted text-muted-foreground",
+    marker: "bg-muted-foreground",
   },
 };
