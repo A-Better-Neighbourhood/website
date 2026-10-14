@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUp, ImageOff } from "lucide-react";
+import { categoryLabel } from "@/lib/categories";
 import { statusMeta, timeAgo } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type { Report, ReportStatus } from "@/types/api";
@@ -92,7 +93,7 @@ export function ReportCard({
         <div className="flex items-center justify-between gap-3 text-muted-foreground">
           {report.category ? (
             <span className="truncate text-xs font-semibold tracking-wide text-primary uppercase">
-              {report.category.replaceAll("_", " ")}
+              {categoryLabel(report.category)}
             </span>
           ) : (
             <span />

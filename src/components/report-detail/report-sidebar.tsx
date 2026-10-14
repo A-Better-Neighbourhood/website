@@ -29,6 +29,7 @@ import {
   useResolveReport,
   useUpvoteReport,
 } from "@/hooks/reports/useReportMutations";
+import { categoryLabel } from "@/lib/categories";
 import { getErrorMessage } from "@/lib/errors";
 import { fullDate, statusMeta } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -242,8 +243,8 @@ export function ReportSidebar({
               {report.category && (
                 <>
                   <dt className="text-muted-foreground">Category</dt>
-                  <dd className="font-medium capitalize">
-                    {report.category.replaceAll("_", " ").toLowerCase()}
+                  <dd className="font-medium">
+                    {categoryLabel(report.category)}
                   </dd>
                 </>
               )}

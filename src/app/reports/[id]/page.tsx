@@ -8,7 +8,9 @@ interface ReportPageProps {
   params: Promise<{ id: string }>;
 }
 
-export async function generateMetadata(props: ReportPageProps): Promise<Metadata> {
+export async function generateMetadata(
+  props: ReportPageProps,
+): Promise<Metadata> {
   const { id } = await props.params;
   return { title: `Report #${shortId(id)}` };
 }

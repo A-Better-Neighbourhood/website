@@ -55,7 +55,7 @@ const reports: Report[] = [
     imageUrl: ["/mocks/pothole.svg", "/mocks/drain.svg"],
     latitude: 28.6139,
     longitude: 77.209,
-    category: "ROAD_DAMAGE",
+    category: "ROAD_ISSUE",
     status: ReportStatus.IN_PROGRESS,
     createdAt: ago(72),
     creator: priya,
@@ -82,7 +82,7 @@ const reports: Report[] = [
     imageUrl: ["/mocks/bins.svg"],
     latitude: 28.6128,
     longitude: 77.2079,
-    category: "WASTE",
+    category: "GARBAGE",
     status: ReportStatus.IN_PROGRESS,
     createdAt: ago(200),
     creator: meera,
@@ -95,7 +95,7 @@ const reports: Report[] = [
     imageUrl: ["/mocks/park.svg"],
     latitude: 28.6152,
     longitude: 77.2085,
-    category: "PUBLIC_SPACE",
+    category: "OTHER",
     status: ReportStatus.PENDING,
     createdAt: ago(50),
     creator: you,
@@ -108,7 +108,7 @@ const reports: Report[] = [
     imageUrl: ["/mocks/drain.svg"],
     latitude: 28.6133,
     longitude: 77.2112,
-    category: "DRAINAGE",
+    category: "WATER_LEAK",
     status: ReportStatus.PENDING,
     createdAt: ago(8),
     creator: arjun,
@@ -121,7 +121,7 @@ const reports: Report[] = [
     imageUrl: ["/mocks/tree.svg"],
     latitude: 28.6121,
     longitude: 77.2095,
-    category: "ROAD_DAMAGE",
+    category: "ROAD_ISSUE",
     status: ReportStatus.PENDING,
     createdAt: ago(3),
     creator: meera,
@@ -134,7 +134,7 @@ const reports: Report[] = [
     imageUrl: [],
     latitude: 28.6149,
     longitude: 77.2072,
-    category: "PUBLIC_SPACE",
+    category: "OTHER",
     status: ReportStatus.RESOLVED,
     createdAt: ago(400),
     creator: priya,
@@ -147,7 +147,7 @@ const reports: Report[] = [
     imageUrl: [],
     latitude: 28.6137,
     longitude: 77.2068,
-    category: "ROAD_DAMAGE",
+    category: "ROAD_ISSUE",
     status: ReportStatus.PENDING,
     createdAt: ago(20),
     creator: you,
@@ -282,7 +282,13 @@ export const mockApi = {
     addActivity(id, activity(ActivityType.MARKED_RESOLVED, ActorType.USER, you, 0));
     return clone(target);
   },
-  async create(input: { title: string; description: string; image: string; location: [number, number] }) {
+  async create(input: {
+    title: string;
+    description: string;
+    image: string;
+    location: [number, number];
+    category: string;
+  }) {
     await delay(600);
     const created = report({
       id: `rep-${Math.random().toString(36).slice(2, 8)}`,
@@ -291,14 +297,17 @@ export const mockApi = {
       imageUrl: input.image ? [input.image] : [],
       latitude: input.location[0],
       longitude: input.location[1],
-      category: "OTHER",
+      category: input.category,
       status: ReportStatus.PENDING,
       createdAt: new Date().toISOString(),
       creator: you,
       upvotes: 0,
     });
     reports.unshift(created);
-    return clone(created);
+    activities[created.id] = [
+      activity(ActivityType.REPORT_CREATED, ActorType.SYSTEM, you, 0),
+    ];
+    return { report: clone(created), merged: false };
   },
   async getProfile() {
     await delay(150);

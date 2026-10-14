@@ -11,8 +11,6 @@ import {
 } from "@/actions/reports";
 import { CreateReportType } from "@/schemas/ReportSchema";
 import { reportKeys } from "./useReports";
-import { AxiosError } from "axios";
-import { toast } from "sonner";
 
 export function useCreateReport() {
   const queryClient = useQueryClient();
@@ -22,15 +20,6 @@ export function useCreateReport() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: reportKeys.lists() });
       queryClient.invalidateQueries({ queryKey: reportKeys.user() });
-    },
-    onError: (error: AxiosError) => {
-      if (error.status === 400) {
-        if (error.response?.data) {
-          toast.error((error.response.data as any).error);
-        } else {
-          toast.error("Failed to create report. Please check your input.");
-        }
-      }
     },
   });
 }
