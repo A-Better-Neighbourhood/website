@@ -1,13 +1,19 @@
 /** @format */
 
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
+import { Bricolage_Grotesque, Figtree } from "next/font/google";
 import "./globals.css";
 import ReactQueryProvider from "@/components/ReactQueryProvider";
+import { SiteFooter } from "@/components/site-footer";
+import { SiteHeader } from "@/components/site-header";
 import { ThemeProvider } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 
-const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
+const figtree = Figtree({ subsets: ["latin"], variable: "--font-sans" });
+const bricolage = Bricolage_Grotesque({
+  subsets: ["latin"],
+  variable: "--font-bricolage",
+});
 
 export const metadata: Metadata = {
   title: "A Better Neighbourhood",
@@ -23,7 +29,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cn("font-sans", geist.variable)}
+      className={cn("font-sans", figtree.variable, bricolage.variable)}
       suppressHydrationWarning
     >
       <body className="antialiased">
@@ -33,7 +39,13 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <ReactQueryProvider>{children}</ReactQueryProvider>
+          <ReactQueryProvider>
+            <div className="flex min-h-svh flex-col">
+              <SiteHeader />
+              <main className="flex-1">{children}</main>
+              <SiteFooter />
+            </div>
+          </ReactQueryProvider>
         </ThemeProvider>
       </body>
     </html>

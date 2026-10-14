@@ -16,8 +16,8 @@ export default async function ReportPage(props: ReportPageProps) {
   }
 
   return (
-    <main className="mx-auto max-w-5xl px-4 py-16">
+    <div className="mx-auto max-w-6xl px-4 py-16">
       <h1 className="text-2xl font-semibold">{report.title}</h1>
-    </main>
+    </div>
   );
 }
