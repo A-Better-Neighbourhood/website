@@ -22,3 +22,13 @@ export interface RequestOptions {
   body?: any;
   requireAuth?: boolean;
 }
+
+const API_ORIGIN = new URL(BASE_URL).origin;
+
+/** Resolves upload paths like "/uploads/x.jpg" returned by the API to absolute URLs. */
+export function assetUrl(path: string) {
+  if (/^\/?uploads\//.test(path)) {
+    return `${API_ORIGIN}${path.startsWith("/") ? "" : "/"}${path}`;
+  }
+  return path;
+}

@@ -16,8 +16,10 @@ import {
   UpvoteReportApiResponse,
 } from "@/types/api";
 import { api } from "@/lib/api";
+import { mockApi, USE_MOCKS } from "@/mocks/reports";
 
 export const getReports = async (): Promise<Report[]> => {
+  if (USE_MOCKS) return mockApi.getReports();
   try {
     const response = await api.get("/reports");
     return (response.data as ReportsListResponse).data || [];
@@ -28,6 +30,7 @@ export const getReports = async (): Promise<Report[]> => {
 };
 
 export const getReportById = async (id: string): Promise<Report | null> => {
+  if (USE_MOCKS) return mockApi.getReportById(id);
   try {
     const response = await api.get(`/reports/${id}`);
     return (response.data as ReportDetailResponse).data || null;
@@ -40,6 +43,7 @@ export const getReportById = async (id: string): Promise<Report | null> => {
 export const getReportActivities = async (
   id: string
 ): Promise<ReportActivity[]> => {
+  if (USE_MOCKS) return mockApi.getReportActivities(id);
   try {
     const response = await api.get(`/reports/${id}/activities`);
     return (response.data as ReportActivitiesResponse).data || [];
@@ -50,6 +54,7 @@ export const getReportActivities = async (
 };
 
 export const getUserReports = async (): Promise<Report[]> => {
+  if (USE_MOCKS) return mockApi.getUserReports();
   try {
     const response = await api.get("/reports/user");
     return (response.data as ReportsListResponse).data || [];
@@ -90,6 +95,7 @@ export const getUserUnresolvedReports = async (): Promise<Report[]> => {
 };
 
 export const addReport = async (data: CreateReportType): Promise<Report> => {
+  if (USE_MOCKS) return mockApi.create(data);
   try {
     const requestData: CreateReportRequest = {
       title: data.title,
@@ -137,6 +143,7 @@ export const addReport = async (data: CreateReportType): Promise<Report> => {
 };
 
 export const resolveReport = async (id: string): Promise<Report> => {
+  if (USE_MOCKS) return mockApi.resolve(id);
   try {
     const response = await api.patch(`/reports/${id}/resolve`, {});
     return (response.data as ResolveReportResponse).data!;
@@ -147,6 +154,7 @@ export const resolveReport = async (id: string): Promise<Report> => {
 };
 
 export const upvoteReport = async (id: string): Promise<void> => {
+  if (USE_MOCKS) return mockApi.upvote(id);
   try {
     await api.post(`/reports/${id}/upvote`);
   } catch (error) {
@@ -160,6 +168,7 @@ export const addComment = async (
   text: string,
   images: string[] = []
 ): Promise<ReportActivity> => {
+  if (USE_MOCKS) return mockApi.addComment(reportId, text, images);
   try {
     const requestData: AddCommentRequest = {
       text,

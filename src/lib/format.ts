@@ -44,3 +44,24 @@ export const statusMeta: Record<
     marker: "bg-muted-foreground",
   },
 };
+
+export function initials(name: string) {
+  return name
+    .split(" ")
+    .filter((part) => /^\p{L}/u.test(part))
+    .map((part) => part[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+}
+
+export function fullDate(date: string) {
+  return new Date(date).toLocaleString("en-IN", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
+}
+
+export function shortId(id: string) {
+  return id.slice(-6);
+}

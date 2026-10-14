@@ -17,20 +17,12 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useAuth } from "@/hooks/useAuth";
+import { initials } from "@/lib/format";
 
 const navigation = [
   { name: "Reports", href: "/reports" },
   { name: "How it works", href: "/#how-it-works" },
 ];
-
-function initials(name: string) {
-  return name
-    .split(" ")
-    .map((part) => part[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-}
 
 export function SiteHeader() {
   const { user } = useAuth();

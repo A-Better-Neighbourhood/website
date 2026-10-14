@@ -7,6 +7,7 @@ import {
   UserProfileResponse,
 } from "@/types/api";
 import { api } from "@/lib/api";
+import { mockApi, USE_MOCKS } from "@/mocks/reports";
 
 export async function signUpUser(
   userData: SignUpRequest
@@ -43,6 +44,9 @@ export async function signInUser(
 }
 
 export async function getUserProfile(): Promise<UserProfileResponse> {
+  if (USE_MOCKS) {
+    return { success: true, data: await mockApi.getProfile(), timestamp: new Date().toISOString() };
+  }
   try {
     const response = await api.get("/auth/profile");
     return response.data as UserProfileResponse;
