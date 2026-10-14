@@ -71,7 +71,7 @@ function EmptyNoticeboard() {
           Nobody has flagged anything yet. Be the first to pin something up
           and get your neighbours behind it.
         </p>
-        <Button className="mt-2 h-11 rounded-lg px-5" asChild>
+        <Button size="lg" asChild>
           <Link href="/reports/add">
             <Plus data-icon="inline-start" />
             Report an issue

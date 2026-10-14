@@ -48,9 +48,18 @@ export function HowItWorks() {
     <section id="how-it-works" className="scroll-mt-20 py-20 md:py-28">
       <div className="mx-auto grid max-w-6xl gap-12 px-4 lg:grid-cols-[1fr_1.4fr] lg:gap-20">
         <div className="lg:sticky lg:top-28 lg:self-start">
-          <p className="mb-4 text-sm font-semibold text-primary">How it works</p>
+          <p className="mb-4 text-sm font-semibold text-primary">
+            How it works
+          </p>
           <h2 className="mb-5 text-4xl leading-[1.1] font-bold md:text-5xl">
-            From &ldquo;someone should&rdquo; to &ldquo;someone did.&rdquo;
+            From{" "}
+            <span className="text-sun-foreground">
+              &ldquo;someone should&rdquo;
+            </span>{" "}
+            to{" "}
+            <span className="text-sage-foreground">
+              &ldquo;someone did.&rdquo;
+            </span>
           </h2>
           <p className="mb-8 max-w-md text-lg text-muted-foreground">
             No forms to chase, no phone queues. Just three small steps, out in
@@ -68,7 +77,7 @@ export function HowItWorks() {
         <ol className="relative flex flex-col gap-4">
           <span
             aria-hidden
-            className="absolute top-10 bottom-10 left-11 border-l-2 md:left-12 border-dashed border-border"
+            className="absolute top-10 bottom-10 left-11 border-l-2 border-dashed border-border"
           />
           {steps.map((step, index) => (
             <li

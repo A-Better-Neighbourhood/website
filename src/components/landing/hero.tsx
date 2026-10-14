@@ -41,17 +41,13 @@ export function Hero() {
           </p>
 
           <div className="flex flex-col gap-3 sm:flex-row">
-            <Button className="h-12 rounded-lg px-6 text-base" asChild>
+            <Button size="lg" asChild>
               <Link href="/reports/add">
                 <Plus data-icon="inline-start" />
                 Report an issue
               </Link>
             </Button>
-            <Button
-              variant="outline"
-              className="h-12 rounded-lg bg-card px-6 text-base"
-              asChild
-            >
+            <Button variant="outline" size="lg" asChild>
               <Link href="/reports">
                 Browse reports
                 <ArrowRight data-icon="inline-end" />
