@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     default: "A Better Neighbourhood",
     template: "%s · A Better Neighbourhood",
   },
-  icons: "/SIH2.webp",
+  icons: "/mocks/park.svg",
   description: "Empowering Communities: Report, Track, and Resolve Together",
 };
 
