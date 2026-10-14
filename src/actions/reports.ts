@@ -14,10 +14,13 @@ import {
   AddCommentRequest,
   AddCommentApiResponse,
   UpvoteReportApiResponse,
+  UserRole,
 } from "@/types/api";
 import { api } from "@/lib/api";
+import { mockApi, USE_MOCKS } from "@/mocks/reports";
 
 export const getReports = async (): Promise<Report[]> => {
+  if (USE_MOCKS) return mockApi.getReports();
   try {
     const response = await api.get("/reports");
     return (response.data as ReportsListResponse).data || [];
@@ -28,6 +31,7 @@ export const getReports = async (): Promise<Report[]> => {
 };
 
 export const getReportById = async (id: string): Promise<Report | null> => {
+  if (USE_MOCKS) return mockApi.getReportById(id);
   try {
     const response = await api.get(`/reports/${id}`);
     return (response.data as ReportDetailResponse).data || null;
@@ -40,6 +44,7 @@ export const getReportById = async (id: string): Promise<Report | null> => {
 export const getReportActivities = async (
   id: string
 ): Promise<ReportActivity[]> => {
+  if (USE_MOCKS) return mockApi.getReportActivities(id);
   try {
     const response = await api.get(`/reports/${id}/activities`);
     return (response.data as ReportActivitiesResponse).data || [];
@@ -50,6 +55,7 @@ export const getReportActivities = async (
 };
 
 export const getUserReports = async (): Promise<Report[]> => {
+  if (USE_MOCKS) return mockApi.getUserReports();
   try {
     const response = await api.get("/reports/user");
     return (response.data as ReportsListResponse).data || [];
@@ -89,47 +95,51 @@ export const getUserUnresolvedReports = async (): Promise<Report[]> => {
   }
 };
 
-export const addReport = async (data: CreateReportType): Promise<Report> => {
+export interface CreatedReport {
+  report: Report;
+  /** True when the API matched an existing report nearby and merged this one into it. */
+  merged: boolean;
+}
+
+export const addReport = async (
+  data: CreateReportType
+): Promise<CreatedReport> => {
+  if (USE_MOCKS) return mockApi.create(data);
   try {
     const requestData: CreateReportRequest = {
       title: data.title,
       description: data.description,
       image: data.image,
       location: data.location,
-      category: "OTHER", // Default category hardcoded for now until schema is updated
+      // Required by the API, but the server replaces it with the category its image model predicts.
+      category: "OTHER",
     };
 
     const response = await api.post("/reports/", requestData, {
       withCredentials: true,
     });
-    const apiResponse = response.data as CreateReportApiResponse;
-    const reportData = apiResponse.data!.report;
+    const { report: created, deduplication } = (
+      response.data as CreateReportApiResponse
+    ).data!;
 
-    // Convert API response to our Report type
-    // The API now returns a complete report object structure that matches our interface close enough
-    // We just need to map it correctly.
-    const newReport: Report = {
-      id: reportData.id,
-      title: reportData.title,
-      description: reportData.description,
-      imageUrl: reportData.imageUrl,
-      latitude: reportData.latitude,
-      longitude: reportData.longitude,
-      category: reportData.category,
-      upvotes: 0,
-      status: reportData.status,
-      duplicateCount: 0,
-      createdAt: reportData.createdAt,
-      creatorId: reportData.creatorId,
-      creator: {
-        // Mock creator for immediate UI update if needed, or fetch fresh
-        id: reportData.creatorId,
-        fullName: "You", // This should ideally come from auth context or response
-        role: "USER" as any,
+    return {
+      merged: deduplication?.merged ?? false,
+      report: {
+        id: created.id,
+        title: created.title,
+        description: created.description,
+        imageUrl: created.imageUrl,
+        latitude: created.latitude,
+        longitude: created.longitude,
+        category: created.category,
+        upvotes: 0,
+        status: created.status,
+        duplicateCount: 0,
+        createdAt: created.createdAt,
+        creatorId: created.creatorId,
+        creator: { id: created.creatorId, fullName: "You", role: UserRole.USER },
       },
     };
-
-    return newReport;
   } catch (error) {
     console.error("Add report error:", error);
     throw error;
@@ -137,6 +147,7 @@ export const addReport = async (data: CreateReportType): Promise<Report> => {
 };
 
 export const resolveReport = async (id: string): Promise<Report> => {
+  if (USE_MOCKS) return mockApi.resolve(id);
   try {
     const response = await api.patch(`/reports/${id}/resolve`, {});
     return (response.data as ResolveReportResponse).data!;
@@ -147,6 +158,7 @@ export const resolveReport = async (id: string): Promise<Report> => {
 };
 
 export const upvoteReport = async (id: string): Promise<void> => {
+  if (USE_MOCKS) return mockApi.upvote(id);
   try {
     await api.post(`/reports/${id}/upvote`);
   } catch (error) {
@@ -160,6 +172,7 @@ export const addComment = async (
   text: string,
   images: string[] = []
 ): Promise<ReportActivity> => {
+  if (USE_MOCKS) return mockApi.addComment(reportId, text, images);
   try {
     const requestData: AddCommentRequest = {
       text,

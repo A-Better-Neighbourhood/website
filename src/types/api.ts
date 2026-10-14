@@ -16,6 +16,7 @@ export interface User {
   address: string;
   contactNo: string;
   createdAt: string;
+  role?: UserRole;
 }
 
 export interface AuthResponse {
@@ -63,7 +64,7 @@ export interface Creator {
 export interface Report {
   id: string;
   title: string;
-  description: string;
+  description: string | null;
   imageUrl: string[]; // Changed to array of strings
   latitude: number;
   longitude: number;
@@ -74,7 +75,8 @@ export interface Report {
   creator: Creator;
   creatorId?: string; // Kept for backward compat if needed, but creator object is preferred
   upvotes: number; // Kept for UI display
-  originalReportId?: string;
+  originalReportId?: string | null;
+  isDuplicate?: boolean;
   hasLiked?: boolean;
 }
 

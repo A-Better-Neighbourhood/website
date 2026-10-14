@@ -1,102 +1,40 @@
 /** @format */
 
-"use client";
-
-import Container from "@/components/Container";
-import ReportsGridWithFilters from "@/components/ReportsGridWithFilters";
-import { useReports } from "@/hooks/reports/useReports";
-import { ReportStatus } from "@/types/api";
+import { Suspense } from "react";
+import type { Metadata } from "next";
 import Link from "next/link";
-import React from "react";
+import { Plus } from "lucide-react";
+import { ReportGridSkeleton } from "@/components/report-card-skeleton";
+import { ReportsBrowser } from "@/components/reports/reports-browser";
+import { Button } from "@/components/ui/button";
 
-const ReportsPage = () => {
-  const { data: reports, isLoading } = useReports();
+export const metadata: Metadata = { title: "Reports" };
 
+export default function ReportsPage() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <div className="bg-slate-900 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-10"></div>
-        <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/40 via-slate-900 to-slate-900"></div>
-        <Container className="py-16 relative z-10">
-          <div className="text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white">
-              Community Reports
-            </h1>
-            <p className="text-xl mb-8 text-slate-300 max-w-2xl mx-auto">
-              Together, we make our neighborhood better. Report, track progress,
-              and see real change happen.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                href="/reports/add"
-                className="bg-emerald-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-emerald-500 transition-colors inline-flex items-center gap-2 shadow-lg shadow-emerald-900/20"
-              >
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 4v16m8-8H4"
-                  />
-                </svg>
-                Report an Issue
-              </Link>
-              <button className="border-2 border-slate-700 text-white px-8 py-3 rounded-full font-semibold hover:bg-slate-800 transition-colors">
-                Learn More
-              </button>
-            </div>
-          </div>
-        </Container>
+    <div className="mx-auto flex max-w-6xl flex-col gap-10 px-4 py-12 md:py-16">
+      <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
+        <div className="flex max-w-2xl flex-col gap-3">
+          <p className="text-sm font-semibold text-primary">Reports</p>
+          <h1 className="text-4xl leading-[1.1] font-bold md:text-5xl">
+            What&apos;s happening on your street
+          </h1>
+          <p className="text-lg text-muted-foreground">
+            Everything your neighbours have flagged, from fresh reports to
+            the ones already sorted.
+          </p>
+        </div>
+        <Button size="lg" className="self-start md:self-auto" asChild>
+          <Link href="/reports/add">
+            <Plus data-icon="inline-start" />
+            Report an issue
+          </Link>
+        </Button>
       </div>
 
-      <Container className="py-8">
-        {/* Stats Section */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-lg p-6 text-center shadow-sm">
-            <div className="text-3xl font-bold text-blue-600 mb-2">
-              {isLoading ? "..." : reports?.length || 0}
-            </div>
-            <div className="text-gray-600">Total Reports</div>
-          </div>
-          <div className="bg-white rounded-lg p-6 text-center shadow-sm">
-            <div className="text-3xl font-bold text-green-600 mb-2">
-              {isLoading
-                ? "..."
-                : reports?.filter((r) => r.status === ReportStatus.RESOLVED)
-                    .length || 0}
-            </div>
-            <div className="text-gray-600">Resolved</div>
-          </div>
-          <div className="bg-white rounded-lg p-6 text-center shadow-sm">
-            <div className="text-3xl font-bold text-orange-600 mb-2">
-              {isLoading
-                ? "..."
-                : reports?.filter((r) => r.status === ReportStatus.IN_PROGRESS)
-                    .length || 0}
-            </div>
-            <div className="text-gray-600">In Progress</div>
-          </div>
-          <div className="bg-white rounded-lg p-6 text-center shadow-sm">
-            <div className="text-3xl font-bold text-yellow-600 mb-2">
-              {isLoading
-                ? "..."
-                : reports?.filter((r) => r.status === ReportStatus.PENDING)
-                    .length || 0}
-            </div>
-            <div className="text-gray-600">Pending</div>
-          </div>
-        </div>
-
-        <ReportsGridWithFilters />
-      </Container>
+      <Suspense fallback={<ReportGridSkeleton />}>
+        <ReportsBrowser />
+      </Suspense>
     </div>
   );
-};
-
-export default ReportsPage;
+}
